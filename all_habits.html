@@ -5,4 +5,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1,
             shrink-to-fit=no" />
+    <link href="http://fonts.cdnfonts.com/css/tiempos-headline" rel="stylesheet">
+    <link rel="stylesheet" href="all_habits.css">
+    <link rel="stylesheet" href="test.scss">
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+        integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 </head>
+
+<body>
+    <header class="home">
+        <div class="search-bar">
+            <input type="text" placeholder="Type and hit Enter ..." autocomplete="off" value=""></input>
+            <a class="search-bar-toggle"><i class='fa fa-search'></i></a></li>
+        </div>
+        <a href="#profile" class="avatar">
+            <i class="fa fa-user" aria-hidden="true"></i>
+        </a>
+    </header>
+
+    <main>
+        <h1>Daily Habits</h1>
+        <p class="click-to-start">Click (+) to start your journal ... </p>
+        <div class="add-habit">
+            <a href="your_habit.html" class="btn btn-white btn-animate"><i class="fa fa-plus" aria-hidden="true"></i>
+            </a>
+        </div>
+        <div class="habit-field">
+            <label for="w3review">Set a new habit:</label>
+            <textarea id="w3review" name="w3review">
+
+            </textarea>
+        </div>
+    </main>
+
+    <footer>
+        <div class="nav-button">
+            <a href="#all-habits" id="all-habits">
+                <i class="fa fa-smile-o" aria-hidden="true"></i>
+                <span>Habits</span>
+            </a>
+            <a href="#calendar" id="calendar">
+                <i class="fa fa-area-chart" aria-hidden="true"></i>
+                <span>Analytics</span>
+            </a>
+            <a href="#setting" class="setting">
+                <i class="fa fa-cog" aria-hidden="true"></i>
+                <span>Setting</span>
+            </a>
+        </div>
+    </footer>
+    <script type="text/javascript" src="all_habits.js"></script>
+    <script type="text/javascript" src="local_storage.js"></script>
+</body>

@@ -1,0 +1,281 @@
+:root {
+    --background-color: white;
+    --font-header: 'Tiempos Headline', sans-serif;
+    --font-base: 'Lato', sans-serif;
+    --font-size: 16px;
+    --navbar-img-width: 50px;
+    --color-base: #3D4177;
+    --color-hover: #313061;
+    --color-icon: #4E449C;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-base);
+    overflow-y: hidden;
+}
+
+.home {
+    padding: 15px;
+    margin: 15px;
+    position: sticky;
+    top: 0;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    height: 70px;
+}
+
+.avatar {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--color-icon);
+    font-size: 30px;
+    padding: 0 15px;
+    margin: auto 10px;
+}
+
+.search-bar {
+    color: var(--color-icon);
+    font-size: 20px;
+    text-decoration: none;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    width: 100%;
+}
+
+.search-bar .search-bar-toggle {
+    font-size: 17px;
+    z-index: 10;
+    background-color: white;
+    display: flex;
+    text-decoration: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    cursor: pointer;
+    transition: 0.5s ease-out;
+    margin-left: 10px;
+    aspect-ratio: 1 / 1;
+}
+
+.search-bar .search-bar-toggle:hover {
+    color: var(--color-hover);
+}
+
+.search-bar.clicked .search-bar-toggle {
+    background-color: var(--color-base);
+    color: white;
+    border-radius: 50%;
+    font-size: 20px;
+}
+
+.search-bar input {
+    width: 0;
+    height: 0;
+    z-index: 1;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    transition: 0.5s ease;
+    font-size: 17px;
+}
+
+.search-bar.clicked input {
+    width: 100%;
+    height: 100%;
+    border-radius: 25px;
+    background-color: var(--color-base);
+    color: white;
+    padding: 10px;
+}
+
+.search-bar.clicked input::placeholder {
+    color: white;
+    font-style: italic;
+}
+
+main {
+    margin: 15px;
+    display: block;
+    padding: 15px;
+    height: 75vh;
+    overflow-y: scroll;
+}
+
+main h1 {
+    font-family: var(--font-header);
+    font-size: 25px;
+    letter-spacing: 1px;
+    color: var(--color-base);
+    margin: 20px 0;
+}
+
+.click-to-start {
+    font-style: italic;
+    color: #f3ba0f;
+    margin: 20px 0;
+
+}
+
+.add-habit {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+main a i {
+    color: #f3ba0f;
+}
+
+footer {
+    z-index: 10;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: white;
+    border-top: solid 0.25px rgba(128, 128, 128, 0.416);
+}
+
+.nav-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin: 5px auto;
+    justify-content: center;
+}
+
+.nav-button a {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    margin: auto 0;
+    padding: 5px;
+    transition: all 0.25s ease;
+}
+
+.nav-button a span {
+    padding-top: 3px;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--color-base);
+}
+
+.nav-button i {
+    font-size: 22px;
+    color: rgba(128, 128, 128, 0.618);
+    transition: 0.2s ease;
+}
+
+.nav-button a:hover i {
+    color: var(--color-base);
+}
+
+/* add new button */
+.btn:link,
+.btn:visited {
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 25px 35px;
+    display: inline-block;
+    border-radius: 100px;
+    transition: all 0.2s;
+    position: absolute;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgb(78, 68, 156, 0.25);
+}
+
+.btn:active {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 10px rgb(78, 68, 156, 0.25);
+}
+
+.btn-white {
+    background-color: #fff;
+    color: #f3ba0f;
+    border: solid 0.5px var(--color-icon);
+    box-shadow: rgb(78, 68, 156, 0.5) 0px 20px 30px -10px;
+}
+
+.btn::after {
+    content: "";
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    border-radius: 100px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    transition: all 0.4s;
+}
+
+.btn-white::after {
+    background-color: var(--color-icon);
+}
+
+.btn:hover::after {
+    transform: scaleX(1.4) scaleY(1.6);
+    opacity: 0;
+}
+
+.btn-animated {
+    animation: moveInBottom 5s ease-out;
+    animation-fill-mode: backwards;
+}
+
+@keyframes moveInBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
+
+@media screen and (min-width: 601px) {
+    .home {
+        height: 120px;
+    }
+
+    .search-bar {
+        height: 80%;
+    }
+
+    main {
+        margin: 25px;
+    }
+
+    .add-habit {
+        height: 110px;
+    }
+
+    .nav-button i {
+        padding: 10px;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .home {
+        margin: 20px;
+    }
+}
