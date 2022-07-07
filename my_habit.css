@@ -1,0 +1,307 @@
+:root {
+    --background-color: white;
+    --font-header: 'Ubuntu', sans-serif;
+    --font-base: 'Lato', sans-serif;
+    --font-size: 16px;
+    --navbar-img-width: 50px;
+    --color-base-large: #FD870A;
+    --color-base-small: #FFF89F;
+    --color-base-border: #E68420;
+    --color-font: #2A3C3F;
+    --color-font-shadow: #112429;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-base);
+    position: relative;
+    background-color: #F3F8F9;
+
+}
+.decorated-img {
+    transform: rotate(30deg);
+    width: 90px;
+    background-color: transparent;
+    position: absolute;
+    right: 13%;
+    top: 42px;
+    filter: drop-shadow(0 0 0.75rem white);
+    filter: blur(0.2px);
+    z-index: 5;
+}
+
+h2 {
+    font-size: 27px;
+    font-family: var(--font-header);
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    color: white;
+    z-index: 5;
+    position: absolute;
+    top: 50%;
+    left: 20px;
+}
+
+.showable-dates {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    padding: 15px 0;
+}
+
+.showable-dates a {
+    text-decoration: none;
+    color: #805BE2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 7px;
+    padding: 2px;
+    border: solid 1px #A192CB;
+    border-radius: 15px;
+}
+
+.showable-dates a h3 {
+    margin: 2px;
+    font-weight: 400;
+}
+
+.showable-dates a p {
+    margin: 2px;
+    font-weight: 400;
+}
+
+.add-new-habit {
+    background-color: #EAE5FA;
+    height: 60vh;
+    margin: 20px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-new-habit a {
+    text-decoration: none;
+    color: #525D60;
+    font-size: 50px;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    padding: 20px;
+}
+
+.add-new-habit p {
+    color: #525D60;
+    font-style: italic;
+}
+
+.add-new-habit.clicked {
+    display: none;
+}
+
+.habit-field {
+    display: none;
+}
+.habit-field.opened {
+    height: 100vh;
+    background: white;
+    margin: 0;
+    padding: 20px;
+    overflow-y: scroll;
+    position: relative;
+    display: block;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.habit-items {
+    margin: 15px 0;
+    z-index: 10;
+    position: relative;
+    width: 100%;
+}
+.habit-item {
+    height: 40px;
+    margin-bottom: 15px;
+}
+.habit-input {
+    position: relative;
+    display: flex;
+    height: 55px;
+    transition: all 0.25s ease-in-out;
+    margin-top: 15px;
+    padding: 0 15px;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.habit-input>input {
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    width: 84%;
+    outline: none;
+    display: inline-block;
+    font-size: 18px;
+    border: solid 2px #D2C4FA;
+    border-radius: 10px;
+    z-index: 10;
+    padding: 10px;
+}
+.save-button {
+    height: 80%;
+    border-radius: 10px;
+    border: none;
+    background-color: #8152FF;
+    color: #FCFCFF;
+}
+
+.habit-display {
+    position: relative;
+    display: flex;
+    height: 55px;
+    transition: all 0.25s ease-in-out;
+    margin: 0;
+    padding: 0 15px;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.move-to-trash {
+    display: none;
+    transition: all 0.25s ease;
+}
+.habit-display:hover .move-to-trash {
+    border: none;
+    background-color: transparent;
+    color: #8e8b8b;
+    font-size: 23px;
+    display: block;
+    right: -30px;
+    bottom: 0;
+}
+.display-container {
+    display: grid;
+    grid-template-columns: 1fr 13fr;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    border-bottom: solid 1px #E9ECEB;
+    padding: 15px;
+}
+.habit-display:hover {
+    background-color: #ECE5FC;
+    border-radius: 10px;
+}
+.habit-id {
+    display: none;
+}
+
+.habit-name {
+    display: inline-block;
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin: 0 5px;
+    overflow-x: scroll;
+}
+.habit-name::first-letter {
+    text-transform: capitalize;
+}
+
+.habit-done {
+    transform: scale(2.5);
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+.habit-done input {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
+.habit-done input[type=checkbox] {
+    accent-color: #fff89f;
+    margin: 0;
+  }
+  
+
+  ::-webkit-input-placeholder {
+    font-style: italic;
+ }
+ :-moz-placeholder {
+    font-style: italic;  
+ }
+ ::-moz-placeholder {
+    font-style: italic;  
+ }
+ :-ms-input-placeholder {  
+    font-style: italic; 
+ }
+
+
+
+
+.header {
+    height: 200px;
+    position: relative;
+}
+  .wrapper {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, rgba(122,71,222,1) 0%, rgba(191,123,212,1) 100%);
+    z-index: 0;
+    position: absolute;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+  }
+  .wrapper div {
+    aspect-ratio: 1/1;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    border-radius: 50px;
+    position: absolute;
+    top: 10%;
+    left: 60%;
+    width: 10px;
+  }
+  div .dot {
+    width: 5px;
+    aspect-ratio: 1/1;
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.5);
+    position: absolute;
+    top: 20%;
+    right: 20%;
+  }
+  .wrapper div:nth-child(1) {
+    top: 0;
+    left: 80%;
+    width: 10px;
+  }
+  .wrapper div:nth-child(2) {
+    top: 30px;
+    left: 90%;
+    animation: animate 3s linear infinite;
+    width: 15px;
+}
+  .wrapper div:nth-child(3) {
+    top: 30%;
+    left: 60%;
+    animation: animate 5s linear infinite;
+    width: 12px;
+  }
+  .wrapper div:nth-child(4) {
+    width: 11px;
+    top: 66%;
+  }
+  .wrapper div:nth-child(5) {
+    top: 50%;
+    left: 50%;
+    animation: animate 6s linear infinite;
+  }
