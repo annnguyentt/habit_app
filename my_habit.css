@@ -21,6 +21,10 @@ body {
     position: relative;
 
 }
+.body-container {
+    max-width: 760px;
+    margin: 0 auto;
+}
 .decorated-img {
     transform: rotate(30deg);
     width: 90px;
@@ -32,7 +36,7 @@ body {
     z-index: 5;
 }
 
-h2 {
+h1 {
     font-size: 27px;
     font-family: var(--font-header);
     font-weight: 500;
@@ -43,13 +47,20 @@ h2 {
     top: 50%;
     left: 20px;
 }
-
+.header p {
+    z-index: 5;
+    color: white;
+    position: absolute;
+    letter-spacing: 0.2px;
+    word-spacing: 0.5px;
+    left: 20px;
+    bottom: 0;
+}
 .showable-dates {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
-    padding: 15px 0;
+    padding: 15px 0 30px 0;
     background-color: #F3F8F9;
-    padding-bottom: 35px;
 }
 
 .showable-dates a {
@@ -78,12 +89,15 @@ h2 {
 .add-new-habit {
     background-color: #EAE5FA;
     height: 60vh;
-    margin: 20px;
+    margin: 0;
+    margin-top: -15px;
     border-radius: 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
 }
 
 .add-new-habit a {
@@ -112,7 +126,7 @@ h2 {
     height: 100vh;
     background: white;
     margin: 0;
-    margin-top: -20px;
+    margin-top: -15px;
     padding: 20px;
     overflow-y: auto;
     position: relative;
@@ -134,18 +148,16 @@ h2 {
 .habit-input {
     position: relative;
     display: flex;
-    height: 55px;
     transition: all 0.25s ease-in-out;
-    margin-top: 20px;
+    margin: 20px auto;
     padding: 0 15px;
-    width: 100%;
     justify-content: space-between;
-    align-items: center;
+    align-items: stretch;
 }
 
 .habit-input>input {
     box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
-    width: 84%;
+    width: 90%;
     outline: none;
     display: inline-block;
     font-size: 18px;
@@ -153,9 +165,9 @@ h2 {
     border-radius: 10px;
     z-index: 10;
     padding: 10px;
+    margin-right: 10px;
 }
 .save-button {
-    height: 80%;
     border-radius: 10px;
     border: none;
     background-color: #8152FF;
@@ -165,31 +177,29 @@ h2 {
 .habit-display {
     position: relative;
     display: flex;
-    height: 55px;
     transition: all 0.25s ease-in-out;
     margin: 0;
     padding: 0 15px;
     width: 100%;
-    overflow-x: auto;
 }
 
-.move-to-trash {
+.remove-button {
     display: none;
     transition: all 0.25s ease;
 }
-.habit-display:hover .move-to-trash {
+.remove-button.clicked {
     border: none;
     background-color: transparent;
     color: #8e8b8b;
     font-size: 23px;
     display: block;
-    right: -30px;
-    bottom: 0;
+    right: -10px;
+    top: -10px;
+    position: absolute;
 }
+
 .display-container {
-    display: grid;
-    grid-template-columns: 1fr 13fr;
-    justify-content: space-between;
+    display: flex;
     align-items: center;
     height: 100%;
     width: 100%;
@@ -200,6 +210,7 @@ h2 {
     background-color: #ECE5FC;
     border-radius: 10px;
 }
+
 .habit-id {
     display: none;
 }
@@ -218,21 +229,20 @@ h2 {
 
 .habit-done {
     border: none;
-    padding: 0;
-    margin: 0;
+    width: 0;
 }
-.habit-done input {
+.habit-checkbox {
     transform: scale(2.5);
     display: inline-block;
-    margin: 0;
+    margin-right: 20px;
     padding: 0;
 }
-.habit-done input[type=checkbox] {
+
+.habit-checkbox[type=checkbox] {
     accent-color: #fff89f;
-    margin: 0;
+    margin-right: 20px;
   }
   
-
   ::-webkit-input-placeholder {
     font-style: italic;
  }

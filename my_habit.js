@@ -23,10 +23,33 @@ function getLenOfObject(Obj) {
     return Object.keys(Obj).length;
 }
 
+// get num of active habits
+function getNumOfActiveHabits(Obj) {
+    let count = 0;
+    for (let [k, v] of Object.entries(Obj)) {
+        if (!v["deleteAt"]) {
+            count += 1;
+        }
+    }
+    return count;
+}
+
+// sort an array
+function sortArray(arr) {
+    return arr.sort((a, b) => a - b);
+}
+
+// get sorted keys of an Object
+function getSortedKeys(obj) {
+    let keyArray = Object.keys(obj).map((i) => parseInt(i));
+    return sortArray(keyArray);
+}
+
 // store an object to localStorage
 function storeToLocalStorage(targetObj, nameOfObject) {
     localStorage.setItem(nameOfObject, JSON.stringify(targetObj));
 }
+
 // get unixtime of today
 function getUnixTimeToday() {
     const today = new Date();
@@ -89,35 +112,86 @@ function openMainPage() {
     habitField.classList.add("opened");
 }
 
+// add event listener to checkbox and update results to local storage 
+function addEventListenerToCheckbox(element) {
+    const habitCheckbox = element.querySelector(".habit-checkbox");
+    habitCheckbox.addEventListener("click", function () {
+        const ishabitDone = habitCheckbox.checked;
+        const habitId = element.getAttribute("data-habit-id");
+        updateRecord(habitId, ishabitDone, todayDate);
+        storeToLocalStorage(habitTracking, "habitTracking");
+    });
+}
+
+// add event listener to remove button, and get the habit out of the list if clicking
+function addEventListenerToRemoveButton(element) {
+    removeButton = element.querySelector(".remove-button");
+    removeButton.addEventListener("click", function () {
+        const habitId = element.getAttribute("data-habit-id");
+        updateHabit(habitId, "deleteAt", getUnixTimeToday());
+        storeToLocalStorage(habitTracking, "habitTracking");
+        element.remove();
+    });
+}
+
 // create a habit item div
 function createNewHabitItemDiv(habitId, habitName, isDone, habitIndex) {
     let newHabit = document.createElement("div");
     newHabit.classList.add("habit-display");
+    newHabit.setAttribute("data-habit-id", habitId);
     let checkStatus = "";
     if (isDone) {
         checkStatus = "checked";
     }
-
+    if (habitName.length < 1) {
+        habitName = "Your habit";
+    }
     newHabit.innerHTML = `
             <div class="display-container">
-                <label class="habit-done" for="checkbox-habit-${habitIndex}">
-                    <input type="checkbox" id="checkbox-habit-${habitIndex}" placeholder="Done" ${checkStatus}>
-                </label>
-                <h3 class='habit-id'>${habitId}</h3>
+                <label class="habit-done" for="checkbox-habit-${habitIndex}"></label>
+                <input class="habit-checkbox" type="checkbox" id="checkbox-habit-${habitIndex}" placeholder="Done" ${checkStatus}>
                 <h3 class='habit-name'>${habitName}</h3>
             </div>
-            <button class="move-to-trash"><i class="fa fa-trash" aria-hidden="true"></i></button>
+            <button class="remove-button"><i class="fa fa-minus-circle" aria-hidden="true"></i></button>
     `;
+    addEventListenerToCheckbox(newHabit);
+    addEventListenerToRemoveButton(newHabit);
+    newHabit.addEventListener('click', function () {
+        const allRemoveButtons = document.querySelectorAll('.remove-button');
+        allRemoveButtons.forEach(item => item.classList.remove('clicked'));
+        const removeButton = newHabit.querySelector('.remove-button');
+        removeButton.classList.add('clicked');
+    })
     return newHabit;
+}
+
+// add new habit to localStorage
+function addNewHabit(habitId, habitName, deleteAt) {
+    allHabits[habitId] = {
+        createAt: habitId,
+        name: habitName,
+        deleteAt: deleteAt,
+    };
+}
+
+// update properties of habits to localStorage
+function updateHabit(habitId, property, propertyValue) {
+    allHabits[habitId][property] = propertyValue;
+}
+
+// update properties of records to localStorage
+function updateRecord(habitId, status, updateDate) {
+    if (!allRecords[habitId]) {
+        allRecords[habitId] = {};
+    }
+    allRecords[habitId][updateDate] = status;
 }
 
 /* SHOW CURRENT DATE ON MAIN PAGE */
 const showableDateArray = getDateArr(0, getUnixTimeToday()).map((item) =>
     formatDate(item)
 );
-
 let showableDates = document.querySelector(".showable-dates");
-
 showableDateArray.forEach(function (item) {
     showableDates.insertAdjacentHTML(
         "beforeend",
@@ -129,7 +203,8 @@ showableDateArray.forEach(function (item) {
     If there is no habits stored in localStorage, the app will display "add-new-habit" layout.
     Otherwise, "habit-input" will be shown
 */
-const todayDate = formatDate(getUnixTimeToday(), toDisplay=false);
+
+const todayDate = formatDate(getUnixTimeToday(), (toDisplay = false));
 const habitTracking = retrieveDataFromLocal("habitTracking");
 const allHabits = habitTracking["habits"];
 const allRecords = habitTracking["records"];
@@ -137,15 +212,17 @@ const allRecords = habitTracking["records"];
 const addNewButton = document.querySelector(".add-new-habit");
 const habitField = document.querySelector(".habit-field");
 const blankHabit = document.querySelector(".habit-input");
+const numActiveHabits = getNumOfActiveHabits(allHabits);
 
-if (getLenOfObject(allHabits) >= 1) {
+if (numActiveHabits >= 1) {
     openMainPage();
     let idx = 0;
-    for (let [habitId, value] of Object.entries(allHabits)) {
-        if (!value["deleteAt"]) {
+    const allHabitIds = getSortedKeys(allHabits);
+    for (let habitId of allHabitIds) {
+        if (!allHabits[habitId]["deleteAt"]) {
             const newHabit = createNewHabitItemDiv(
                 habitId,
-                value["name"],
+                allHabits[habitId]["name"],
                 allRecords[habitId][todayDate],
                 idx
             );
@@ -159,24 +236,11 @@ addNewButton.addEventListener("click", function () {
     openMainPage(addNewButton, habitField);
 });
 
-/* HABIT IS SAVED */
-function addNewHabit(habitId, habitName, deleteAt) {
-    allHabits[habitId] = {
-        createAt: habitId,
-        name: habitName,
-        deleteAt: deleteAt,
-    };
-}
-function updateHabit(habitId, property, propertyValue) {
-    allHabits[habitId][property] = propertyValue
-}
-function updateRecord(habitId, status, updateDate) {
-    if (!allRecords[habitId]) {
-        allRecords[habitId] = {};
-    }
-    allRecords[habitId][updateDate] = status;
-}
+/* Display number of active habits today */
+const header = document.querySelector('.header');
+header.insertAdjacentHTML('beforeend', `<p>You have ${numActiveHabits} Journals today</p>`)
 
+/* HABIT IS SAVED */
 const saveButton = document.querySelector(".save-button");
 saveButton.addEventListener("click", function () {
     const habitName = blankHabit.querySelector("input").value;
@@ -187,37 +251,9 @@ saveButton.addEventListener("click", function () {
         false,
         getLenOfObject(allHabits)
     );
-
     insertBeforeANode(blankHabit, newHabitDiv);
     addNewHabit(habitId, habitName, null);
     updateRecord(habitId, false, todayDate);
     storeToLocalStorage(habitTracking, "habitTracking");
     blankHabit.querySelector("input").value = "";
 });
-
-/* HABIT IS DONE 
-    check if habit is done, then store result of the checkbox into the localStorage
-*/
-const habitDone = document.querySelectorAll(".habit-done");
-habitDone.forEach((item) =>
-    item.addEventListener("click", function () {
-        const habitContainer = item.parentNode;
-        const isHabitDone = item.querySelector("input").checked;
-        const habitId = habitContainer.querySelector(".habit-id").textContent;
-
-        updateRecord(habitId, isHabitDone, todayDate);
-        storeToLocalStorage(habitTracking, "habitTracking");
-    })
-);
-
-/* MOVE HABIT TO TRASH */
-trashCan = document.querySelectorAll(".move-to-trash");
-trashCan.forEach((item) =>
-    item.addEventListener("click", function () {
-        const parentNodeOfTrash = item.parentNode;
-        const habitId = parentNodeOfTrash.querySelector(".habit-id").textContent;
-        updateHabit(habitId, 'deleteAt', getUnixTimeToday())
-        storeToLocalStorage(habitTracking, "habitTracking");
-        parentNodeOfTrash.remove();
-    })
-);
