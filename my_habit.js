@@ -112,13 +112,6 @@ function openMainPage() {
     habitField.classList.add("opened");
 }
 
-// count num of streak days
-// function countDaysStreak(habitId) {
-//     const habitRecords = allRecords[habitId];
-//     const numDays = 
-
-// }
-
 // add event listener to checkbox and update results to local storage
 function addEventListenerToCheckbox(element) {
     const habitCheckbox = element.querySelector(".habit-checkbox");
@@ -143,8 +136,8 @@ function addEventListenerToRemoveButton(element) {
 
 // close all remove buttons
 function closeAllRemoveButtons() {
-    const allRemoveButtons = document.querySelectorAll('.remove-button');
-    allRemoveButtons.forEach(item => item.classList.remove('clicked'));
+    const allRemoveButtons = document.querySelectorAll(".remove-button");
+    allRemoveButtons.forEach((item) => item.classList.remove("clicked"));
 }
 
 // create a habit item div
@@ -165,18 +158,22 @@ function createNewHabitItemDiv(habitId, habitName, isDone, habitIndex) {
                 <input class="habit-checkbox" type="checkbox" id="checkbox-habit-${habitIndex}" placeholder="Done" ${checkStatus}>
                 <div class='habit-name'>
                     <h3>${habitName}</h3>
-                    <p class='habit-result'>Complete today to have the first streak</p>
+                    <p class='habit-result'></p>
                 </div>
             </div>
             <button class="remove-button"><i class="fa fa-minus-circle" aria-hidden="true"></i></button>
     `;
+    // habitResult = getHabitResult(habitId, formatDate(getUnixTimeToday(), false), allRecords);
+    habitResult = getHabitResult(habitId, '2022-07-12', allRecords);
+    newHabit.querySelector('.habit-result').innerText = habitResult;
+
     addEventListenerToCheckbox(newHabit);
     addEventListenerToRemoveButton(newHabit);
-    newHabit.addEventListener('click', function () {
+    newHabit.addEventListener("click", function () {
         closeAllRemoveButtons();
-        const removeButton = newHabit.querySelector('.remove-button');
-        removeButton.classList.add('clicked');
-    })
+        const removeButton = newHabit.querySelector(".remove-button");
+        removeButton.classList.add("clicked");
+    });
     return newHabit;
 }
 
@@ -251,8 +248,11 @@ addNewButton.addEventListener("click", function () {
 });
 
 /* DISPLAY NUMBER OF ACTIVE HABITS TODAY */
-const header = document.querySelector('.header');
-header.insertAdjacentHTML('beforeend', `<p>You have ${numActiveHabits} Journals today</p>`)
+const header = document.querySelector(".header");
+header.insertAdjacentHTML(
+    "beforeend",
+    `<p>You have ${numActiveHabits} Journals today</p>`
+);
 
 /* HABIT IS SAVED */
 const saveButton = document.querySelector(".save-button");
@@ -273,13 +273,63 @@ saveButton.addEventListener("click", function () {
 });
 
 /* CLOSE REMOVE BUTTON IF USERS CLICK ESLEWHERE NOT HABIT ITEMS */
-document.addEventListener('click', function (event) {
-    if ((event.target.classList.contains('habit-display'))
-        || (event.target.parentNode.classList.contains('habit-display'))
-        || (event.target.parentNode.parentNode.classList.contains('habit-display'))
-        || (event.target.parentNode.parentNode.parentNode.classList.contains('habit-display'))
-    ) { }
-    else {
+document.addEventListener("click", function (event) {
+    if (
+        event.target.classList.contains("habit-display") ||
+        event.target.parentNode.classList.contains("habit-display") ||
+        event.target.parentNode.parentNode.classList.contains("habit-display") ||
+        event.target.parentNode.parentNode.parentNode.classList.contains(
+            "habit-display"
+        )
+    ) {
+    } else {
         closeAllRemoveButtons();
     }
-})
+});
+
+// get habit result to insert to habit-result class
+function getHabitResult(habitId, chosenDate, allRecords) {
+    /* get all records of the habitID */
+    const recordsOfHabit = allRecords[habitId];
+    /* select records smaller than the chosen date and checkbox value is true */
+    const filteredRecords = Object.keys(recordsOfHabit)
+        .filter((key) => key <= chosenDate && recordsOfHabit[key] === true)
+        .reduce((obj, key) => {
+            obj[key] = recordsOfHabit[key];
+            return obj;
+        }, {});
+    const dateArr = Object.keys(filteredRecords).sort().reverse();
+    console.log(dateArr)
+    let habitResult = "";
+
+    if (getLenOfObject(filteredRecords) < 1) {
+        habitResult = "Complete today to have the first streak";
+    } else if (calTwoStringDates(dateArr[0], chosenDate) <= 86400 * 1000) {
+        const numDaysStreak = countNumDaysStreak(dateArr);
+        habitResult = `${numDaysStreak}-day${numDaysStreak > 1 ? "s" : ""} streak`;
+    } else {
+        const dateDiff = Math.floor(
+            (calTwoStringDates(dateArr[0], chosenDate) / (86400 * 1000)) 
+        );
+        habitResult = `Completed ${dateDiff} day${dateDiff > 1 ? "s" : ""
+            } ago. Let's Get It Done!!`;
+    }
+    return habitResult;
+}
+
+// count num of days of streak
+function countNumDaysStreak(arr) {
+    let numDaysStreak = 1;
+    for (let day = 1; day < arr.length; day++) {
+        if (calTwoStringDates(arr[day], arr[day - 1]) === 86400 * 1000) {
+            numDaysStreak += 1;
+        }
+        else { break }
+    }
+    return numDaysStreak;
+}
+
+function calTwoStringDates(startDate, endDate) {
+    // return difference in millisecond
+    return new Date(endDate) - new Date(startDate);
+}
