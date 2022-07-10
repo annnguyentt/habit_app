@@ -112,7 +112,14 @@ function openMainPage() {
     habitField.classList.add("opened");
 }
 
-// add event listener to checkbox and update results to local storage 
+// count num of streak days
+// function countDaysStreak(habitId) {
+//     const habitRecords = allRecords[habitId];
+//     const numDays = 
+
+// }
+
+// add event listener to checkbox and update results to local storage
 function addEventListenerToCheckbox(element) {
     const habitCheckbox = element.querySelector(".habit-checkbox");
     habitCheckbox.addEventListener("click", function () {
@@ -134,6 +141,12 @@ function addEventListenerToRemoveButton(element) {
     });
 }
 
+// close all remove buttons
+function closeAllRemoveButtons() {
+    const allRemoveButtons = document.querySelectorAll('.remove-button');
+    allRemoveButtons.forEach(item => item.classList.remove('clicked'));
+}
+
 // create a habit item div
 function createNewHabitItemDiv(habitId, habitName, isDone, habitIndex) {
     let newHabit = document.createElement("div");
@@ -150,15 +163,17 @@ function createNewHabitItemDiv(habitId, habitName, isDone, habitIndex) {
             <div class="display-container">
                 <label class="habit-done" for="checkbox-habit-${habitIndex}"></label>
                 <input class="habit-checkbox" type="checkbox" id="checkbox-habit-${habitIndex}" placeholder="Done" ${checkStatus}>
-                <h3 class='habit-name'>${habitName}</h3>
+                <div class='habit-name'>
+                    <h3>${habitName}</h3>
+                    <p class='habit-result'>Complete today to have the first streak</p>
+                </div>
             </div>
             <button class="remove-button"><i class="fa fa-minus-circle" aria-hidden="true"></i></button>
     `;
     addEventListenerToCheckbox(newHabit);
     addEventListenerToRemoveButton(newHabit);
     newHabit.addEventListener('click', function () {
-        const allRemoveButtons = document.querySelectorAll('.remove-button');
-        allRemoveButtons.forEach(item => item.classList.remove('clicked'));
+        closeAllRemoveButtons();
         const removeButton = newHabit.querySelector('.remove-button');
         removeButton.classList.add('clicked');
     })
@@ -203,7 +218,6 @@ showableDateArray.forEach(function (item) {
     If there is no habits stored in localStorage, the app will display "add-new-habit" layout.
     Otherwise, "habit-input" will be shown
 */
-
 const todayDate = formatDate(getUnixTimeToday(), (toDisplay = false));
 const habitTracking = retrieveDataFromLocal("habitTracking");
 const allHabits = habitTracking["habits"];
@@ -236,7 +250,7 @@ addNewButton.addEventListener("click", function () {
     openMainPage(addNewButton, habitField);
 });
 
-/* Display number of active habits today */
+/* DISPLAY NUMBER OF ACTIVE HABITS TODAY */
 const header = document.querySelector('.header');
 header.insertAdjacentHTML('beforeend', `<p>You have ${numActiveHabits} Journals today</p>`)
 
@@ -257,3 +271,15 @@ saveButton.addEventListener("click", function () {
     storeToLocalStorage(habitTracking, "habitTracking");
     blankHabit.querySelector("input").value = "";
 });
+
+/* CLOSE REMOVE BUTTON IF USERS CLICK ESLEWHERE NOT HABIT ITEMS */
+document.addEventListener('click', function (event) {
+    if ((event.target.classList.contains('habit-display'))
+        || (event.target.parentNode.classList.contains('habit-display'))
+        || (event.target.parentNode.parentNode.classList.contains('habit-display'))
+        || (event.target.parentNode.parentNode.parentNode.classList.contains('habit-display'))
+    ) { }
+    else {
+        closeAllRemoveButtons();
+    }
+})
