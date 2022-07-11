@@ -120,6 +120,11 @@ function addEventListenerToCheckbox(element) {
         const habitId = element.getAttribute("data-habit-id");
         updateRecord(habitId, ishabitDone, todayDate);
         storeToLocalStorage(habitTracking, "habitTracking");
+        // update the habit result
+        const habitDisplay = habitCheckbox.parentNode;
+        const habitResult = habitDisplay.querySelector('.habit-result');
+        const habitResultNewContent = getHabitResult(habitId, formatDate(getUnixTimeToday(), false), allRecords);
+        habitResult.innerText = habitResultNewContent;
     });
 }
 
@@ -138,6 +143,51 @@ function addEventListenerToRemoveButton(element) {
 function closeAllRemoveButtons() {
     const allRemoveButtons = document.querySelectorAll(".remove-button");
     allRemoveButtons.forEach((item) => item.classList.remove("clicked"));
+}
+// get habit result to insert to habit-result class
+function getHabitResult(habitId, chosenDate, allRecords) {
+    /* get all records of the habitID */
+    const recordsOfHabit = allRecords[habitId];
+    /* select records smaller than the chosen date and checkbox value is true */
+    const filteredRecords = Object.keys(recordsOfHabit)
+        .filter((key) => key <= chosenDate && recordsOfHabit[key] === true)
+        .reduce((obj, key) => {
+            obj[key] = recordsOfHabit[key];
+            return obj;
+        }, {});
+    const dateArr = Object.keys(filteredRecords).sort().reverse();
+    let habitResult = "";
+
+    if (getLenOfObject(filteredRecords) < 1) {
+        habitResult = "Complete today to have the first streak";
+    } else if (calTwoStringDates(dateArr[0], chosenDate) <= 86400 * 1000) {
+        const numDaysStreak = countNumDaysStreak(dateArr);
+        habitResult = `${numDaysStreak}-day${numDaysStreak > 1 ? "s" : ""} streak`;
+    } else {
+        const dateDiff = Math.floor(
+            (calTwoStringDates(dateArr[0], chosenDate) / (86400 * 1000))
+        );
+        habitResult = `Completed ${dateDiff} day${dateDiff > 1 ? "s" : ""
+            } ago. Let's Get It Done!!`;
+    }
+    return habitResult;
+}
+
+// count num of days of streak
+function countNumDaysStreak(arr) {
+    let numDaysStreak = 1;
+    for (let day = 1; day < arr.length; day++) {
+        if (calTwoStringDates(arr[day], arr[day - 1]) === 86400 * 1000) {
+            numDaysStreak += 1;
+        }
+        else { break }
+    }
+    return numDaysStreak;
+}
+
+function calTwoStringDates(startDate, endDate) {
+    // return difference in millisecond
+    return new Date(endDate) - new Date(startDate);
 }
 
 // create a habit item div
@@ -163,8 +213,7 @@ function createNewHabitItemDiv(habitId, habitName, isDone, habitIndex) {
             </div>
             <button class="remove-button"><i class="fa fa-minus-circle" aria-hidden="true"></i></button>
     `;
-    // habitResult = getHabitResult(habitId, formatDate(getUnixTimeToday(), false), allRecords);
-    habitResult = getHabitResult(habitId, '2022-07-12', allRecords);
+    habitResult = getHabitResult(habitId, formatDate(getUnixTimeToday(), false), allRecords);
     newHabit.querySelector('.habit-result').innerText = habitResult;
 
     addEventListenerToCheckbox(newHabit);
@@ -287,49 +336,4 @@ document.addEventListener("click", function (event) {
     }
 });
 
-// get habit result to insert to habit-result class
-function getHabitResult(habitId, chosenDate, allRecords) {
-    /* get all records of the habitID */
-    const recordsOfHabit = allRecords[habitId];
-    /* select records smaller than the chosen date and checkbox value is true */
-    const filteredRecords = Object.keys(recordsOfHabit)
-        .filter((key) => key <= chosenDate && recordsOfHabit[key] === true)
-        .reduce((obj, key) => {
-            obj[key] = recordsOfHabit[key];
-            return obj;
-        }, {});
-    const dateArr = Object.keys(filteredRecords).sort().reverse();
-    console.log(dateArr)
-    let habitResult = "";
 
-    if (getLenOfObject(filteredRecords) < 1) {
-        habitResult = "Complete today to have the first streak";
-    } else if (calTwoStringDates(dateArr[0], chosenDate) <= 86400 * 1000) {
-        const numDaysStreak = countNumDaysStreak(dateArr);
-        habitResult = `${numDaysStreak}-day${numDaysStreak > 1 ? "s" : ""} streak`;
-    } else {
-        const dateDiff = Math.floor(
-            (calTwoStringDates(dateArr[0], chosenDate) / (86400 * 1000)) 
-        );
-        habitResult = `Completed ${dateDiff} day${dateDiff > 1 ? "s" : ""
-            } ago. Let's Get It Done!!`;
-    }
-    return habitResult;
-}
-
-// count num of days of streak
-function countNumDaysStreak(arr) {
-    let numDaysStreak = 1;
-    for (let day = 1; day < arr.length; day++) {
-        if (calTwoStringDates(arr[day], arr[day - 1]) === 86400 * 1000) {
-            numDaysStreak += 1;
-        }
-        else { break }
-    }
-    return numDaysStreak;
-}
-
-function calTwoStringDates(startDate, endDate) {
-    // return difference in millisecond
-    return new Date(endDate) - new Date(startDate);
-}
