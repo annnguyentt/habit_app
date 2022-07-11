@@ -380,7 +380,11 @@ div .dot {
 
 .progress-bar::-webkit-progress-bar {
     background-color: #E3EEF2;
+    width: 100%;
     border-radius: 7px;
+    transition: all 0.2s ease-out;
+    height: 8px;
+    position: relative;
 }
 
 .progress-bar::-webkit-progress-value {
@@ -391,7 +395,11 @@ div .dot {
 
 .progress-bar::-moz-progress-bar {
     background-color: #E3EEF2;
+    width: 100%;
     border-radius: 7px;
+    transition: all 0.2s ease-out;
+    height: 8px;
+    position: relative;
 }
 
 .progress-bar::-moz-progress-value {
@@ -402,7 +410,11 @@ div .dot {
 
 .progress-bar::-ms-progress-bar {
     background-color: #E3EEF2;
+    width: 100%;
     border-radius: 7px;
+    transition: all 0.2s ease-out;
+    height: 8px;
+    position: relative;
 }
 
 .progress-bar::-ms-progress-value {
@@ -413,7 +425,11 @@ div .dot {
 
 .progress-bar::-o-progress-bar {
     background-color: #E3EEF2;
+    width: 100%;
     border-radius: 7px;
+    transition: all 0.2s ease-out;
+    height: 8px;
+    position: relative;
 }
 
 .progress-bar::-o-progress-value {
@@ -452,5 +468,57 @@ div .dot {
     to {
         width: 20px;
         color: #FFE187;
+    }
+}
+
+@-webkit-keyframes transformation {
+    from {
+        -webkit-width: 30px;
+        font-size: 35px;
+        -webkit-color: #47B39A;
+    }
+
+    to {
+        -webkit-width: 20px;
+        -webkit-color: #FFE187;
+    }
+}
+
+@-ms-keyframes transformation {
+    from {
+        -ms-width: 30px;
+        font-size: 35px;
+        -ms-color: #47B39A;
+    }
+
+    to {
+        -ms-width: 20px;
+        -ms-color: #FFE187;
+    }
+}
+
+@-moz-keyframes transformation {
+    from {
+        -moz-width: 30px;
+        font-size: 35px;
+        -moz-color: #47B39A;
+    }
+
+    to {
+        -moz-width: 20px;
+        -moz-color: #FFE187;
+    }
+}
+
+@-o-keyframes transformation {
+    from {
+        -o-width: 30px;
+        font-size: 35px;
+        -o-color: #47B39A;
+    }
+
+    to {
+        -o-width: 20px;
+        -o-color: #FFE187;
     }
 }

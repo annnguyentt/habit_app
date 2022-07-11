@@ -55,14 +55,14 @@ function calNumActiveHabits(chosenDate) {
 }
 
 function updateProgressBar(chosenDate) {
-    const numDoneHabits = calNumDoneHabits(chosenDate),
+    let numDoneHabits = calNumDoneHabits(chosenDate),
         numActiveHabits = calNumActiveHabits(chosenDate),
         progressPCT = Math.round(numDoneHabits / numActiveHabits * 100),
         habitProgress = document.querySelector('#all-habits-progress'),
         progressTitle = document.querySelector('.daily-progress-title'),
         quote = progressTitle.querySelector('#quote'),
         percentage = progressTitle.querySelector('#percentage');
-
+    if (isNaN(progressPCT)) {progressPCT = 0};
     habitProgress.value = progressPCT;
     percentage.innerHTML = `${progressPCT}%`;
     if (progressPCT === 0) {
@@ -77,7 +77,7 @@ function updateProgressBar(chosenDate) {
     } else if (progressPCT < 100) {
         quote.innerText = "Your're almost done, go ahead!"
         habitProgress.classList.remove('completed');
-    } else {
+    } else if (progressPCT === 100) {
         quote.innerText = "All habits are completed. Stay ahead!"
         habitProgress.classList.add('completed');
     }
@@ -174,6 +174,7 @@ function addEventListenerToCheckbox(element, chosenDate) {
         // audio play when the checkbox is checked
         if (ishabitDone) {
             audio.play();
+            console.log('audio')
         }
         // update the habit result
         const habitDisplay = habitCheckbox.parentNode;
@@ -330,6 +331,8 @@ showableDateArray.forEach(function (item) {
     If there is no habits stored in localStorage, the app will display "add-new-habit" layout.
     Otherwise, "habit-input" will be shown
 */
+const audio = new Audio("sound_effect/8SUM472-click-casual-digital.mp3");
+
 const chosenDate = formatDate(getUnixTimeToday(), (toDisplay = false));
 const habitTracking = retrieveDataFromLocal("habitTracking");
 const allHabits = habitTracking["habits"];
@@ -408,6 +411,3 @@ document.addEventListener("click", function (event) {
         closeAllRemoveButtons();
     }
 });
-
-/* sound effect when ticking checkbox */
-const audio = new Audio("sound_effect/8SUM472-click-casual-digital.mp3");
