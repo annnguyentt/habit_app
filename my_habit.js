@@ -159,6 +159,7 @@ function formatDate(unixTime, toDisplay = true) {
 function openMainPage() {
     addNewButton.classList.add("clicked");
     habitField.classList.add("opened");
+    updateProgressBar(chosenDate);
 }
 
 // add event listener to checkbox and update results to local storage
@@ -356,7 +357,6 @@ if (numActiveHabits >= 1) {
             idx += 1;
         }
     }
-    updateProgressBar(chosenDate);
 }
 
 addNewButton.addEventListener("click", function () {
