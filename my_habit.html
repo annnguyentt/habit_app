@@ -2,21 +2,20 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1,
             shrink-to-fit=no" />
-    <link href="http://fonts.cdnfonts.com/css/tiempos-headline" rel="stylesheet">
-    <link rel="stylesheet" href="my_habit.css">
-    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+    <link href="http://fonts.cdnfonts.com/css/tiempos-headline" rel="stylesheet" />
+    <link rel="stylesheet" href="my_habit.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link
         href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
-        rel="stylesheet">
+        rel="stylesheet" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
-        integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+        integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous" />
     <link
         href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
-        rel="stylesheet">
-
+        rel="stylesheet" />
 </head>
 
 <body>
@@ -29,7 +28,7 @@
                 <div><span class="dot"></span></div>
                 <div><span class="dot"></span></div>
             </div>
-            <img src="images/unnamed.png" class="decorated-img">
+            <img src="images/unnamed.png" class="decorated-img" />
             <h1>Daily Habits</h1>
         </div>
         <div class="showable-dates"></div>
@@ -38,11 +37,21 @@
             <p>Click (+) to start your journal ...</p>
         </div>
         <div class="habit-field">
+            <div class="daily-progress">
+                <div class="daily-progress-title">
+                    <p id="quote"></p>
+                    <p id="percentage"></p>
+                </div>
+                <label for="all-habits-progress"></label>
+                <progress id="all-habits-progress" class="progress-bar" max="100"></progress>
+            </div>
             <label for="blank-habit" class="habit-input">
-                <input type="text" id="blank-habit" placeholder="Add your habit">
+                <input type="text" id="blank-habit" placeholder="Add your habit" />
                 <button class="save-button">Save</button>
             </label>
         </div>
     </div>
     <script type="text/javascript" src="my_habit.js"></script>
 </body>
+
+</html>

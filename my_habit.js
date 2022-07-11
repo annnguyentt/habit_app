@@ -23,15 +23,64 @@ function getLenOfObject(Obj) {
     return Object.keys(Obj).length;
 }
 
-// get num of active habits
-function getNumOfActiveHabits(Obj) {
+// calculate number of checked habits
+function calNumDoneHabits(chosenDate) {
     let count = 0;
-    for (let [k, v] of Object.entries(Obj)) {
-        if (!v["deleteAt"]) {
-            count += 1;
+    for (let [habitId, habitIdProp] of Object.entries(allHabits)) {
+        if (
+            !habitIdProp["deleteAt"] &&
+            allRecords[habitId].hasOwnProperty(chosenDate)
+        ) {
+            if (allRecords[habitId][chosenDate]) {
+                count += 1;
+            }
         }
     }
     return count;
+}
+
+// calculate num of active habits
+function calNumActiveHabits(chosenDate) {
+    let count = 0;
+    for (let habitIdProp of Object.values(allHabits)) {
+        if (formatDate(habitIdProp["createAt"], false) <= chosenDate) {
+            if (!habitIdProp["deleteAt"]) {
+                count += 1;
+            } else if (formatDate(habitIdProp["deleteAt"], false) > chosenDate) {
+                count += 1;
+            }
+        }
+    }
+    return count;
+}
+
+function updateProgressBar(chosenDate) {
+    const numDoneHabits = calNumDoneHabits(chosenDate),
+        numActiveHabits = calNumActiveHabits(chosenDate),
+        progressPCT = Math.round(numDoneHabits / numActiveHabits * 100),
+        habitProgress = document.querySelector('#all-habits-progress'),
+        progressTitle = document.querySelector('.daily-progress-title'),
+        quote = progressTitle.querySelector('#quote'),
+        percentage = progressTitle.querySelector('#percentage');
+
+    habitProgress.value = progressPCT;
+    percentage.innerHTML = `${progressPCT}%`;
+    if (progressPCT === 0) {
+        quote.innerText = "Let's start a new day to shine!"
+        habitProgress.classList.remove('completed');
+    } else if (progressPCT < 50) {
+        quote.innerText = "You're almost halfway, keep it up!"
+        habitProgress.classList.remove('completed');
+    } else if (progressPCT === 50) {
+        quote.innerText = "You're close to being finished, hold on!"
+        habitProgress.classList.remove('completed');
+    } else if (progressPCT < 100) {
+        quote.innerText = "Your're almost done, go ahead!"
+        habitProgress.classList.remove('completed');
+    } else {
+        quote.innerText = "All habits are completed. Stay ahead!"
+        habitProgress.classList.add('completed');
+    }
 }
 
 // sort an array
@@ -113,18 +162,29 @@ function openMainPage() {
 }
 
 // add event listener to checkbox and update results to local storage
-function addEventListenerToCheckbox(element) {
+function addEventListenerToCheckbox(element, chosenDate) {
     const habitCheckbox = element.querySelector(".habit-checkbox");
     habitCheckbox.addEventListener("click", function () {
+        // insert data of the new habit to local storage
         const ishabitDone = habitCheckbox.checked;
         const habitId = element.getAttribute("data-habit-id");
-        updateRecord(habitId, ishabitDone, todayDate);
+        updateRecord(habitId, ishabitDone, chosenDate);
         storeToLocalStorage(habitTracking, "habitTracking");
+        // audio play when the checkbox is checked
+        if (ishabitDone) {
+            audio.play();
+        }
         // update the habit result
         const habitDisplay = habitCheckbox.parentNode;
-        const habitResult = habitDisplay.querySelector('.habit-result');
-        const habitResultNewContent = getHabitResult(habitId, formatDate(getUnixTimeToday(), false), allRecords);
+        const habitResult = habitDisplay.querySelector(".habit-result");
+        const habitResultNewContent = getHabitResult(
+            habitId,
+            chosenDate,
+            allRecords
+        );
         habitResult.innerText = habitResultNewContent;
+        // update progress bar
+        updateProgressBar(chosenDate);
     });
 }
 
@@ -136,6 +196,7 @@ function addEventListenerToRemoveButton(element) {
         updateHabit(habitId, "deleteAt", getUnixTimeToday());
         storeToLocalStorage(habitTracking, "habitTracking");
         element.remove();
+        updateProgressBar(chosenDate);
     });
 }
 
@@ -144,6 +205,7 @@ function closeAllRemoveButtons() {
     const allRemoveButtons = document.querySelectorAll(".remove-button");
     allRemoveButtons.forEach((item) => item.classList.remove("clicked"));
 }
+
 // get habit result to insert to habit-result class
 function getHabitResult(habitId, chosenDate, allRecords) {
     /* get all records of the habitID */
@@ -165,7 +227,7 @@ function getHabitResult(habitId, chosenDate, allRecords) {
         habitResult = `${numDaysStreak}-day${numDaysStreak > 1 ? "s" : ""} streak`;
     } else {
         const dateDiff = Math.floor(
-            (calTwoStringDates(dateArr[0], chosenDate) / (86400 * 1000))
+            calTwoStringDates(dateArr[0], chosenDate) / (86400 * 1000)
         );
         habitResult = `Completed ${dateDiff} day${dateDiff > 1 ? "s" : ""
             } ago. Let's Get It Done!!`;
@@ -179,19 +241,20 @@ function countNumDaysStreak(arr) {
     for (let day = 1; day < arr.length; day++) {
         if (calTwoStringDates(arr[day], arr[day - 1]) === 86400 * 1000) {
             numDaysStreak += 1;
+        } else {
+            break;
         }
-        else { break }
     }
     return numDaysStreak;
 }
 
+// calculate the difference in millisecond between 2 dates
 function calTwoStringDates(startDate, endDate) {
-    // return difference in millisecond
     return new Date(endDate) - new Date(startDate);
 }
 
 // create a habit item div
-function createNewHabitItemDiv(habitId, habitName, isDone, habitIndex) {
+function createNewHabitItemDiv(habitId, habitName, isDone, habitIndex, chosenDate) {
     let newHabit = document.createElement("div");
     newHabit.classList.add("habit-display");
     newHabit.setAttribute("data-habit-id", habitId);
@@ -205,7 +268,7 @@ function createNewHabitItemDiv(habitId, habitName, isDone, habitIndex) {
     newHabit.innerHTML = `
             <div class="display-container">
                 <label class="habit-done" for="checkbox-habit-${habitIndex}"></label>
-                <input class="habit-checkbox" type="checkbox" id="checkbox-habit-${habitIndex}" placeholder="Done" ${checkStatus}>
+                <input class="habit-checkbox" type="checkbox" id="checkbox-habit-${habitIndex} onchange="myfunction()" placeholder="Done" ${checkStatus}>
                 <div class='habit-name'>
                     <h3>${habitName}</h3>
                     <p class='habit-result'></p>
@@ -213,10 +276,12 @@ function createNewHabitItemDiv(habitId, habitName, isDone, habitIndex) {
             </div>
             <button class="remove-button"><i class="fa fa-minus-circle" aria-hidden="true"></i></button>
     `;
-    habitResult = getHabitResult(habitId, formatDate(getUnixTimeToday(), false), allRecords);
-    newHabit.querySelector('.habit-result').innerText = habitResult;
-
-    addEventListenerToCheckbox(newHabit);
+    // update habit result after changing checkbox click
+    habitResult = getHabitResult(habitId, chosenDate, allRecords);
+    newHabit.querySelector(".habit-result").innerText = habitResult;
+    // add click event to checkbox
+    addEventListenerToCheckbox(newHabit, chosenDate);
+    // add click event to remove button
     addEventListenerToRemoveButton(newHabit);
     newHabit.addEventListener("click", function () {
         closeAllRemoveButtons();
@@ -264,7 +329,7 @@ showableDateArray.forEach(function (item) {
     If there is no habits stored in localStorage, the app will display "add-new-habit" layout.
     Otherwise, "habit-input" will be shown
 */
-const todayDate = formatDate(getUnixTimeToday(), (toDisplay = false));
+const chosenDate = formatDate(getUnixTimeToday(), (toDisplay = false));
 const habitTracking = retrieveDataFromLocal("habitTracking");
 const allHabits = habitTracking["habits"];
 const allRecords = habitTracking["records"];
@@ -272,7 +337,7 @@ const allRecords = habitTracking["records"];
 const addNewButton = document.querySelector(".add-new-habit");
 const habitField = document.querySelector(".habit-field");
 const blankHabit = document.querySelector(".habit-input");
-const numActiveHabits = getNumOfActiveHabits(allHabits);
+const numActiveHabits = calNumActiveHabits(chosenDate);
 
 if (numActiveHabits >= 1) {
     openMainPage();
@@ -283,13 +348,15 @@ if (numActiveHabits >= 1) {
             const newHabit = createNewHabitItemDiv(
                 habitId,
                 allHabits[habitId]["name"],
-                allRecords[habitId][todayDate],
-                idx
+                allRecords[habitId][chosenDate],
+                idx,
+                chosenDate
             );
             insertBeforeANode(blankHabit, newHabit);
             idx += 1;
         }
     }
+    updateProgressBar(chosenDate);
 }
 
 addNewButton.addEventListener("click", function () {
@@ -308,17 +375,23 @@ const saveButton = document.querySelector(".save-button");
 saveButton.addEventListener("click", function () {
     const habitName = blankHabit.querySelector("input").value;
     const habitId = getUnixTimeToday();
+    // add the new habit to local storage first
+    addNewHabit(habitId, habitName, null);
+    updateRecord(habitId, false, chosenDate);
+    storeToLocalStorage(habitTracking, "habitTracking");
+    // create new habit div
     const newHabitDiv = createNewHabitItemDiv(
         habitId,
         habitName,
         false,
-        getLenOfObject(allHabits)
+        getLenOfObject(allHabits),
+        chosenDate
     );
+    // inseart into layout before the blank habit
     insertBeforeANode(blankHabit, newHabitDiv);
-    addNewHabit(habitId, habitName, null);
-    updateRecord(habitId, false, todayDate);
-    storeToLocalStorage(habitTracking, "habitTracking");
+    // clear the input value after saving
     blankHabit.querySelector("input").value = "";
+    updateProgressBar(chosenDate);
 });
 
 /* CLOSE REMOVE BUTTON IF USERS CLICK ESLEWHERE NOT HABIT ITEMS */
@@ -336,4 +409,5 @@ document.addEventListener("click", function (event) {
     }
 });
 
-
+/* sound effect when ticking checkbox */
+const audio = new Audio("sound_effect/8SUM472-click-casual-digital.mp3");
