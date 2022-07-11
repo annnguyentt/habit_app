@@ -23,35 +23,31 @@ function getLenOfObject(Obj) {
     return Object.keys(Obj).length;
 }
 
-// calculate number of checked habits
+// calculate number of completed habits
 function calNumDoneHabits(chosenDate) {
     let count = 0;
-    for (let [habitId, habitIdProp] of Object.entries(allHabits)) {
-        if (
-            !habitIdProp["deleteAt"] &&
-            allRecords[habitId].hasOwnProperty(chosenDate)
-        ) {
-            if (allRecords[habitId][chosenDate]) {
-                count += 1;
-            }
+    const activeHabits = getActiveHabitIds(chosenDate);
+    for (let habitId of activeHabits) {
+        if (allRecords[habitId][chosenDate]) {
+            count += 1
         }
     }
     return count;
 }
 
 // calculate num of active habits
-function calNumActiveHabits(chosenDate) {
-    let count = 0;
-    for (let habitIdProp of Object.values(allHabits)) {
+function getActiveHabitIds(chosenDate) {
+    let activeHabits = [];
+    for (let [habitId, habitIdProp] of Object.entries(allHabits)) {
         if (formatDate(habitIdProp["createAt"], false) <= chosenDate) {
             if (!habitIdProp["deleteAt"]) {
-                count += 1;
+                activeHabits.push(habitId);
             } else if (formatDate(habitIdProp["deleteAt"], false) > chosenDate) {
-                count += 1;
+                activeHabits.push(habitId);
             }
         }
     }
-    return count;
+    return activeHabits;
 }
 // display num of active habits on the chosen date
 function displayActiveHabits(numActiveHabits) {
@@ -61,13 +57,14 @@ function displayActiveHabits(numActiveHabits) {
 
 function updateProgressBar(chosenDate) {
     let numDoneHabits = calNumDoneHabits(chosenDate),
-        numActiveHabits = calNumActiveHabits(chosenDate),
+        numActiveHabits = getActiveHabitIds(chosenDate).length,
         progressPCT = Math.round(numDoneHabits / numActiveHabits * 100),
         habitProgress = document.querySelector('#all-habits-progress'),
         progressTitle = document.querySelector('.daily-progress-title'),
         quote = progressTitle.querySelector('#quote'),
         percentage = progressTitle.querySelector('#percentage');
-    if (isNaN(progressPCT)) {progressPCT = 0};
+    if (isNaN(progressPCT)) { progressPCT = 0 };
+
     habitProgress.value = progressPCT;
     percentage.innerHTML = `${progressPCT}%`;
     if (progressPCT === 0) {
@@ -94,9 +91,9 @@ function sortArray(arr) {
 }
 
 // get sorted keys of an Object
-function getSortedKeys(obj) {
-    let keyArray = Object.keys(obj).map((i) => parseInt(i));
-    return sortArray(keyArray);
+function getSortedHabitArray(arr) {
+    let sortedArr = arr.map((i) => parseInt(i));
+    return sortArray(sortedArr);
 }
 
 // store an object to localStorage
@@ -179,7 +176,6 @@ function addEventListenerToCheckbox(element, chosenDate) {
         // audio play when the checkbox is checked
         if (ishabitDone) {
             audio.play();
-            console.log('audio')
         }
         // update the habit result
         const habitDisplay = habitCheckbox.parentNode;
@@ -200,12 +196,13 @@ function addEventListenerToRemoveButton(element, chosenDate) {
     removeButton = element.querySelector(".remove-button");
     removeButton.addEventListener("click", function () {
         const habitId = element.getAttribute("data-habit-id");
-        updateHabit(habitId, "deleteAt", getUnixTimeToday());
+        updateHabit(habitId, "deleteAt", (new Date(chosenDate).getTime()));
         storeToLocalStorage(habitTracking, "habitTracking");
         element.remove();
+        console.log('Removed this habit');
         updateProgressBar(chosenDate);
 
-        let numActiveHabits = calNumActiveHabits(chosenDate);
+        let numActiveHabits = getActiveHabitIds(chosenDate).length;
         displayActiveHabits(numActiveHabits);
     });
 }
@@ -304,7 +301,7 @@ function createNewHabitItemDiv(habitId, habitName, isDone, habitIndex, chosenDat
 // add new habit to localStorage
 function addNewHabit(habitId, habitName, deleteAt) {
     allHabits[habitId] = {
-        createAt: habitId,
+        createAt: (new Date(chosenDate)).getTime(),
         name: habitName,
         deleteAt: deleteAt,
     };
@@ -321,10 +318,13 @@ function updateRecord(habitId, status, updateDate) {
         allRecords[habitId] = {};
     }
     allRecords[habitId][updateDate] = status;
+    console.log('Record update is completed!')
 }
 
-/* SHOW CURRENT DATE ON MAIN PAGE */
-const showableDateArray = getDateArr(0, getUnixTimeToday()).map((item) =>
+/* SHOW CHOSEN DATE ON MAIN PAGE */
+const chosenDate = formatDate(getUnixTimeToday(), false);
+
+const showableDateArray = getDateArr(0, (new Date(chosenDate).getTime())).map((item) =>
     formatDate(item)
 );
 let showableDates = document.querySelector(".showable-dates");
@@ -340,13 +340,11 @@ showableDateArray.forEach(function (item) {
     Otherwise, "habit-input" will be shown
 */
 const audio = new Audio("sound_effect/8SUM472-click-casual-digital.mp3");
-
-const chosenDate = formatDate(getUnixTimeToday(), (toDisplay = false));
 const habitTracking = retrieveDataFromLocal("habitTracking");
 const allHabits = habitTracking["habits"];
 const allRecords = habitTracking["records"];
 
-let numActiveHabits = calNumActiveHabits(chosenDate);
+let numActiveHabits = getActiveHabitIds(chosenDate).length;
 displayActiveHabits(numActiveHabits);
 
 const addNewButton = document.querySelector(".add-new-habit");
@@ -356,19 +354,17 @@ const blankHabit = document.querySelector(".habit-input");
 if (numActiveHabits >= 1) {
     openMainPage();
     let idx = 0;
-    const allHabitIds = getSortedKeys(allHabits);
-    for (let habitId of allHabitIds) {
-        if (!allHabits[habitId]["deleteAt"]) {
-            const newHabit = createNewHabitItemDiv(
-                habitId,
-                allHabits[habitId]["name"],
-                allRecords[habitId][chosenDate],
-                idx,
-                chosenDate
-            );
-            insertBeforeANode(blankHabit, newHabit);
-            idx += 1;
-        }
+    let allActiveHabitIds = getSortedHabitArray(getActiveHabitIds(chosenDate));
+    for (let habitId of allActiveHabitIds) {
+        const newHabit = createNewHabitItemDiv(
+            habitId,
+            allHabits[habitId]["name"],
+            allRecords[habitId][chosenDate],
+            idx,
+            chosenDate
+        );
+        insertBeforeANode(blankHabit, newHabit);
+        idx += 1;
     }
 }
 
@@ -397,7 +393,7 @@ saveButton.addEventListener("click", function () {
     // inseart into layout before the blank habit
     insertBeforeANode(blankHabit, newHabitDiv);
     // re-count number of active habits to display on banner
-    let numActiveHabits = calNumActiveHabits(chosenDate);
+    let numActiveHabits = getActiveHabitIds(chosenDate).length;
     displayActiveHabits(numActiveHabits);
     // clear the input value after saving
     blankHabit.querySelector("input").value = "";
