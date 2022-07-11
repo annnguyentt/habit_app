@@ -53,6 +53,11 @@ function calNumActiveHabits(chosenDate) {
     }
     return count;
 }
+// display num of active habits on the chosen date
+function displayActiveHabits(numActiveHabits) {
+    const header = document.querySelector(".header");
+    header.querySelector('p').innerText = `You have ${numActiveHabits} Journals today`;
+}
 
 function updateProgressBar(chosenDate) {
     let numDoneHabits = calNumDoneHabits(chosenDate),
@@ -191,7 +196,7 @@ function addEventListenerToCheckbox(element, chosenDate) {
 }
 
 // add event listener to remove button, and get the habit out of the list if clicking
-function addEventListenerToRemoveButton(element) {
+function addEventListenerToRemoveButton(element, chosenDate) {
     removeButton = element.querySelector(".remove-button");
     removeButton.addEventListener("click", function () {
         const habitId = element.getAttribute("data-habit-id");
@@ -199,6 +204,9 @@ function addEventListenerToRemoveButton(element) {
         storeToLocalStorage(habitTracking, "habitTracking");
         element.remove();
         updateProgressBar(chosenDate);
+
+        let numActiveHabits = calNumActiveHabits(chosenDate);
+        displayActiveHabits(numActiveHabits);
     });
 }
 
@@ -284,7 +292,7 @@ function createNewHabitItemDiv(habitId, habitName, isDone, habitIndex, chosenDat
     // add click event to checkbox
     addEventListenerToCheckbox(newHabit, chosenDate);
     // add click event to remove button
-    addEventListenerToRemoveButton(newHabit);
+    addEventListenerToRemoveButton(newHabit, chosenDate);
     newHabit.addEventListener("click", function () {
         closeAllRemoveButtons();
         const removeButton = newHabit.querySelector(".remove-button");
@@ -338,10 +346,12 @@ const habitTracking = retrieveDataFromLocal("habitTracking");
 const allHabits = habitTracking["habits"];
 const allRecords = habitTracking["records"];
 
+let numActiveHabits = calNumActiveHabits(chosenDate);
+displayActiveHabits(numActiveHabits);
+
 const addNewButton = document.querySelector(".add-new-habit");
 const habitField = document.querySelector(".habit-field");
 const blankHabit = document.querySelector(".habit-input");
-const numActiveHabits = calNumActiveHabits(chosenDate);
 
 if (numActiveHabits >= 1) {
     openMainPage();
@@ -366,12 +376,6 @@ addNewButton.addEventListener("click", function () {
     openMainPage(addNewButton, habitField);
 });
 
-/* DISPLAY NUMBER OF ACTIVE HABITS TODAY */
-const header = document.querySelector(".header");
-header.insertAdjacentHTML(
-    "beforeend",
-    `<p>You have ${numActiveHabits} Journals today</p>`
-);
 
 /* HABIT IS SAVED */
 const saveButton = document.querySelector(".save-button");
@@ -392,6 +396,9 @@ saveButton.addEventListener("click", function () {
     );
     // inseart into layout before the blank habit
     insertBeforeANode(blankHabit, newHabitDiv);
+    // re-count number of active habits to display on banner
+    let numActiveHabits = calNumActiveHabits(chosenDate);
+    displayActiveHabits(numActiveHabits);
     // clear the input value after saving
     blankHabit.querySelector("input").value = "";
     updateProgressBar(chosenDate);
