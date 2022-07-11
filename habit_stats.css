@@ -1,0 +1,51 @@
+:root {
+    --background-color: white;
+    --font-header: 'Ubuntu', sans-serif;
+    --font-base: 'Lato', sans-serif;
+    --font-size: 16px;
+    --navbar-img-width: 50px;
+    --color-base-large: #FD870A;
+    --color-base-small: #fdf153;
+    --color-base-border: #E68420;
+    --color-font: #2A3C3F;
+    --color-font-shadow: #112429;
+}
+body {
+    background-color: white;
+    font-family: var(--font-base);
+}
+.header {
+    height: auto;
+    background-color: white;
+}
+h1 {
+    color: black;
+    position: relative;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 70px;
+}
+.period-bar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: center;
+    justify-content: space-around;
+    margin: 10px 15px;
+}
+.period-bar a {
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    color: #9A9EC6;
+    text-align: center;
+    padding: 10px 0;
+    margin: 0 5px;
+    border: solid 1px #F3F5FF;
+    border-radius: 20px;
+}
+.selected-period {
+    color: #9C77DE;
+    background-color: #F7F2FF;
+}

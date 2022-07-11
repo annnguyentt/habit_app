@@ -327,7 +327,7 @@ const chosenDate = formatDate(getUnixTimeToday(), false);
 const showableDateArray = getDateArr(0, (new Date(chosenDate).getTime())).map((item) =>
     formatDate(item)
 );
-let showableDates = document.querySelector(".showable-dates");
+const showableDates = document.querySelector(".showable-dates");
 showableDateArray.forEach(function (item) {
     showableDates.insertAdjacentHTML(
         "beforeend",
@@ -414,3 +414,5 @@ document.addEventListener("click", function (event) {
         closeAllRemoveButtons();
     }
 });
+
+/* ANALYTICS */
