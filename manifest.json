@@ -16,6 +16,6 @@
     "start_url": "https://habitbee.annpossible.com/",
     "background_color": "#3367D6",
     "display": "fullscreen",
-    "scope": "/",
+    "scope": "/#",
     "theme_color": "#3367D6"
 }
