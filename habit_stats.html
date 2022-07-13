@@ -17,19 +17,53 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
         rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;696;700&display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap"
+        rel="stylesheet">
+
+
 </head>
+
 <body>
     <div class="header">
         <h1><span>Stats</span></h1>
-        <div class="period-bar">
-            <a href="" id="daily" class="selected-period">Daily</a>
-            <a href="" id="weekly">Weekly</a>
-            <a href="" id="monthly">Monthly</a>
+        <ul id="period-items">
+            <li class="period selected">This Week</li>
+            <li class="period">This Month</li>
+            <li class="period">Last Month</li>
+            <li class="period">Last 30 Days</li>
+            <li class="period">Last 60 Days</li>
+            <li class="period">Custom</li>
+        </ul>
+    </div>
+    <div class="stats-display">
+        <div id="overview">
+            <div id="total-habit">
+                <i class="fa fa-star" aria-hidden="true" style="color:#F4BB0C;"></i>
+                <p class="item-value">20</p>
+                <p class="item-name">Total habits</p>
+            </div>
+            <div id="longest-streak">
+                <i class="fa fa-rocket" aria-hidden="true" style="color:#8152FF;"></i>
+                <p class="item-value">27 Days</p>
+                <p class="item-name">Longest streak</p>
+            </div>
+            <div id="fully-done">
+                <i class="fa fa-check" aria-hidden="true" style="color: #41D996;"></i>
+                <p class="item-value">10</p>
+                <p class="item-name">Fully done habits</p>
+            </div>
+            <div id="overview-item">
+                <i class="fa fa-bolt" aria-hidden="true" style="color: #FC5DBE; transform: rotate(10deg);"></i>
+                <p class="item-value">10 %</p>
+                <p class="item-name">Completion rate</p>
+            </div>
         </div>
     </div>
-    <div>
-        <h2>Completion rate</h2>
-    </div>
-
-    <script type="text/javascript" src="my_habit.js"></script>
+    <script type="text/javascript" src="functions.js"></script>
+    <script type="text/javascript" src="habit_stats.js"></script>
 </body>
