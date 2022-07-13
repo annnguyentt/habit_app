@@ -3,8 +3,23 @@ const habitTracking = retrieveDataFromLocal("habitTracking");
 const allHabits = habitTracking["habits"];
 const allRecords = habitTracking["records"];
 
-const periodItems = document.querySelector('#period-items');
-periodItems.addEventListener('click', function(event) {
-    console.log(event.target.innerText)
-});
+const periodBar = document.querySelector('#period-bar');
+const periodItems = periodBar.querySelectorAll('.period');
+
+periodBar.addEventListener('click', function(event) {
+    if (event.target.tagName === 'LI') {
+        periodItems.forEach(item => item.classList.remove('selected'));
+        event.target.classList.add('selected')
+
+        let selectedPeriod = event.target.innerText;
+        console.log(selectedPeriod);
+        getTotalHabits(selectedPeriod)
+    }
+})
+
+function getTotalHabits(selectedPeriod) {
+    for (let habitIdProp of Object.values(allHabits)) {
+        if (formatDate(habitIdProp['createAt'], false) <= ) {
+    }
+}
 

@@ -30,7 +30,7 @@ h1 {
     height: 70px;
 }
 
-#period-items {
+#period-bar {
     display: flex;
     margin: 15px auto;
     padding: 10px 15px;
