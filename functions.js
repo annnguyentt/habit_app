@@ -90,6 +90,11 @@ function updateProgressBar(selectedDate) {
     } else if (progressPCT === 100) {
         quote.innerText = "All habits are completed. Stay ahead!";
         habitProgress.classList.add("completed");
+        confetti({
+            angle: 140,
+            spread: 55,
+            origin: { x: 1 , y: 0.6}
+          });
     }
 }
 

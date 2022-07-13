@@ -92,4 +92,3 @@ document.addEventListener("click", function (event) {
     }
 });
 
-/* ANALYTICS */
