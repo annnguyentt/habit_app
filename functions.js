@@ -93,7 +93,7 @@ function updateProgressBar(selectedDate) {
         confetti({
             angle: 140,
             spread: 55,
-            origin: { x: 1 , y: 0.6}
+            origin: { x: 0.95 , y: 0.4}
           });
     }
 }
