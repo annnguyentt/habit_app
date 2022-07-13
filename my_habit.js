@@ -94,49 +94,41 @@ document.addEventListener("click", function (event) {
 
 /* ADD TO HOMESCREEN */
 // Initialize deferredPrompt for use later to show browser install prompt.
-let deferredPrompt;
+var deferredPrompt;
 
-window.addEventListener('beforeinstallprompt', (e) => {
-    // Prevent the mini-infobar from appearing on mobile
-    e.preventDefault();
-    // Stash the event so it can be triggered later.
-    deferredPrompt = e;
-    // Update UI notify the user they can install the PWA
-    showInstallPromotion();
-    // Optionally, send analytics event that PWA install promo was shown.
-    console.log(`'beforeinstallprompt' event was fired.`);
+window.addEventListener('beforeinstallprompt', function(e) {
+  console.log('beforeinstallprompt Event fired');
+  e.preventDefault();
+
+  // Stash the event so it can be triggered later.
+  deferredPrompt = e;
+
+  return false;
 });
 
-buttonInstall.addEventListener('click', async () => {
-    // Hide the app provided install promotion
-    hideInstallPromotion();
-    // Show the install prompt
+let btnSave = document.querySelector('.install-button');
+btnSave.addEventListener('click', function() {
+    console.log(1);
+  if(deferredPrompt !== undefined) {
+    // The user has had a postive interaction with our app and Chrome
+    // has tried to prompt previously, so let's show the prompt.
     deferredPrompt.prompt();
-    // Wait for the user to respond to the prompt
-    const { outcome } = await deferredPrompt.userChoice;
-    // Optionally, send analytics event with outcome of user choice
-    console.log(`User response to the install prompt: ${outcome}`);
-    // We've used the prompt, and can't use it again, throw it away
-    deferredPrompt = null;
+
+    // Follow what the user has done with the prompt.
+    deferredPrompt.userChoice.then(function(choiceResult) {
+
+      console.log(choiceResult.outcome);
+
+      if(choiceResult.outcome == 'dismissed') {
+        console.log('User cancelled home screen install');
+      }
+      else {
+        console.log('User added to home screen');
+      }
+
+      // We no longer need the prompt.  Clear it up.
+      deferredPrompt = null;
+    });
+  }
 });
-
-
-window.addEventListener('appinstalled', () => {
-    // Hide the app-provided install promotion
-    hideInstallPromotion();
-    // Clear the deferredPrompt so it can be garbage collected
-    deferredPrompt = null;
-    // Optionally, send analytics event to indicate successful install
-    console.log('PWA was installed');
-});
-
-function getPWADisplayMode() {
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-    if (document.referrer.startsWith('android-app://')) {
-        return 'twa';
-    } else if (navigator.standalone || isStandalone) {
-        return 'standalone';
-    }
-    return 'browser';
-}
 

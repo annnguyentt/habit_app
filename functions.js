@@ -172,11 +172,13 @@ function formatDate(unixTime, toDisplay = true) {
 
 // open main page
 function openMainPage() {
-    let addNewButton = document.querySelector(".add-new-habit");
-    let habitField = document.querySelector(".habit-field");
+    let addNewButton = document.querySelector(".add-new-habit"),
+    habitField = document.querySelector(".habit-field"),
+    dailyProgress = document.querySelector(".daily-progress");
 
     addNewButton.classList.add("clicked");
     habitField.classList.add("opened");
+    dailyProgress.classList.add("opened");
     updateProgressBar(selectedDate);
 }
 

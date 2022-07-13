@@ -1,16 +1,21 @@
 {
-    "short_name": "HabitBees",
-    "name": "HabitBees",
+    "short_name": "HabitBee",
+    "name": "HabitBee",
     "icons": [
-      {
-        "src": "/images/icons-vector.svg",
-        "type": "image/svg+xml",
-        "sizes": "512x512"
-      }
+        {
+            "src": "/images/habitbee_logo_2_192.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "/images/habitbee_logo_2_512.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
     ],
-    "start_url": "/?source=pwa",
+    "start_url": "https://habitbee.annpossible.com/",
     "background_color": "#3367D6",
-    "display": "standalone",
+    "display": "fullscreen",
     "scope": "/",
     "theme_color": "#3367D6"
-  }
+}

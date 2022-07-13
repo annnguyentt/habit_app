@@ -60,6 +60,73 @@ h1 {
     bottom: 0;
 }
 
+.header {
+    height: 200px;
+    position: relative;
+    background-color: #F3F8F9;
+}
+
+.wrapper {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, rgba(122, 71, 222, 1) 0%, rgba(191, 123, 212, 1) 100%);
+    z-index: 0;
+    position: absolute;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.wrapper div {
+    aspect-ratio: 1/1;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    border-radius: 50px;
+    position: absolute;
+    top: 10%;
+    left: 60%;
+    width: 10px;
+}
+
+div .dot {
+    width: 5px;
+    aspect-ratio: 1/1;
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.5);
+    position: absolute;
+    top: 20%;
+    right: 20%;
+}
+
+.wrapper div:nth-child(1) {
+    top: 0;
+    left: 80%;
+    width: 10px;
+}
+
+.wrapper div:nth-child(2) {
+    top: 30px;
+    left: 90%;
+    animation: animate 3s linear infinite;
+    width: 15px;
+}
+
+.wrapper div:nth-child(3) {
+    top: 30%;
+    left: 60%;
+    animation: animate 5s linear infinite;
+    width: 12px;
+}
+
+.wrapper div:nth-child(4) {
+    width: 11px;
+    top: 66%;
+}
+
+.wrapper div:nth-child(5) {
+    top: 50%;
+    left: 50%;
+    animation: animate 6s linear infinite;
+}
+
 .showable-dates {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
@@ -95,13 +162,16 @@ h1 {
     height: 60vh;
     margin: 0;
     margin-top: -15px;
-    border-radius: 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
+}
+
+.add-new-habit.clicked {
+    display: none;
 }
 
 .add-new-habit a {
@@ -119,11 +189,11 @@ h1 {
     font-style: italic;
 }
 
-.add-new-habit.clicked {
+.daily-progress {
     display: none;
 }
 
-.daily-progress {
+.daily-progress.opened {
     width: 100%;
     margin: 0 auto;
     margin-top: -15px;
@@ -132,6 +202,7 @@ h1 {
     border-top-right-radius: 20px;
     background-color: white;
     padding: 20px;
+    display: block;
 }
 
 .daily-progress-title {
@@ -304,7 +375,6 @@ h1 {
 }
 
 .habit-field.opened {
-    height: 100vh;
     background: white;
     margin: 0;
     padding: 20px;
@@ -457,69 +527,20 @@ h1 {
     font-style: italic;
 }
 
-.header {
-    height: 200px;
-    position: relative;
-    background-color: #F3F8F9;
+.install-button {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    border-radius: 20px;
+    background: linear-gradient(45deg, rgba(254,214,13,1) 0%, rgba(108,46,212,1) 100%);
+    color: white;
+    width: 100px;
+    justify-content: center;
+    height: 30px;
 }
-
-.wrapper {
-    height: 100%;
-    width: 100%;
-    background: linear-gradient(90deg, rgba(122, 71, 222, 1) 0%, rgba(191, 123, 212, 1) 100%);
-    z-index: 0;
-    position: absolute;
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
-}
-
-.wrapper div {
-    aspect-ratio: 1/1;
-    border: 2px solid rgba(255, 255, 255, 0.7);
-    border-radius: 50px;
-    position: absolute;
-    top: 10%;
-    left: 60%;
-    width: 10px;
-}
-
-div .dot {
-    width: 5px;
-    aspect-ratio: 1/1;
-    border-radius: 50px;
-    background: rgba(255, 255, 255, 0.5);
-    position: absolute;
-    top: 20%;
-    right: 20%;
-}
-
-.wrapper div:nth-child(1) {
-    top: 0;
-    left: 80%;
-    width: 10px;
-}
-
-.wrapper div:nth-child(2) {
-    top: 30px;
-    left: 90%;
-    animation: animate 3s linear infinite;
-    width: 15px;
-}
-
-.wrapper div:nth-child(3) {
-    top: 30%;
-    left: 60%;
-    animation: animate 5s linear infinite;
-    width: 12px;
-}
-
-.wrapper div:nth-child(4) {
-    width: 11px;
-    top: 66%;
-}
-
-.wrapper div:nth-child(5) {
-    top: 50%;
-    left: 50%;
-    animation: animate 6s linear infinite;
+.install-button p {
+    margin-left: 10px;
 }

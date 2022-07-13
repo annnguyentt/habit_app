@@ -15,10 +15,12 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
         rel="stylesheet" />
+    <link rel="manifest" href="/manifest.json" />
+
 </head>
 
 <body>
-    <div class="body-container">
+    <main class="body-container">
         <div class="header">
             <div class="wrapper">
                 <div><span class="dot"></span></div>
@@ -50,7 +52,13 @@
                 <button class="save-button">Save</button>
             </label>
         </div>
-    </div>
+    </main>
+    <footer>
+        <div class="install-button">
+            <i class="fa fa-angle-double-down" aria-hidden="true"></i>
+            <p>Install</p>
+        </div>
+    </footer>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script type="text/javascript" src="functions.js"></script>
     <script type="text/javascript" src="my_habit.js"></script>
