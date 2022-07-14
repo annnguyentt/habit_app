@@ -129,32 +129,50 @@ div .dot {
 
 .showable-dates {
     display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    padding: 15px 0 30px 0;
+    grid-template-columns: repeat(7, 1fr);
+    padding: 15px 5px 30px 5px;
     background-color: #F3F8F9;
+    margin: 0;
 }
 
-.showable-dates a {
+.date {
     text-decoration: none;
-    color: #805BE2;
+    color: rgba(46, 13, 95, 0.5);
+    margin: 3px;
+    padding: 5px;
+    border: solid 1px #e0e4f7;
+    border-radius: 10px;
+    aspect-ratio: 1/1;
+    max-width: 80px;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
-    margin: 7px;
-    padding: 2px;
-    border: solid 1px #A192CB;
-    border-radius: 15px;
+    justify-content: center;
+    flex-direction: column;
 }
-
-.showable-dates a h3 {
+.date.today {
+    color: #6C30FF;
+}
+.date.today h3 {
+    font-weight: 700;
+}
+.date.selected {
+    color: #2E0D5F;
+    background-color: #FFE188;
+    border: solid 1px #F7E0BD;
+}
+.date.selected h3 {
+    font-weight: 700;
+}
+.date h3 {
     margin: 2px;
     font-weight: 400;
+    font-size: 14px;
+    text-transform:uppercase;
 }
 
-.showable-dates a p {
+.date p {
     margin: 2px;
-    font-weight: 400;
+    font-weight: 700;
 }
 
 .add-new-habit {

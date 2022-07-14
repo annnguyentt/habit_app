@@ -62,7 +62,7 @@ function displayActiveHabits(numActiveHabits) {
     const header = document.querySelector(".header");
     header.querySelector(
         "p"
-    ).innerText = `You have ${numActiveHabits} Journals today`;
+    ).innerText = `You have ${numActiveHabits} to-do ${numActiveHabits > 1? "items" : "item"} today`;
 }
 
 // update progress bar
@@ -138,13 +138,13 @@ function formatDate(unixTime, toDisplay = true) {
     const mm = ("0" + (newDate.getMonth() + 1)).slice(-2);
     const yyyy = newDate.getFullYear();
     const dayNames = [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
+        "Sun",
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
     ];
     const monthNames = [
         "Jan",
@@ -162,8 +162,7 @@ function formatDate(unixTime, toDisplay = true) {
     ];
     if (toDisplay) {
         return [
-            dayNames[weekDay],
-            monthNames[parseInt(mm - 1)] + " " + dd + ", " + yyyy,
+            dayNames[weekDay], dd, `${yyyy}-${mm}-${dd}`
         ];
     } else {
         return `${yyyy}-${mm}-${dd}`;
