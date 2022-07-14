@@ -131,7 +131,7 @@ div .dot {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     padding: 15px 5px 30px 5px;
-    background-color: #F3F8F9;
+    background-color: #EEF4F7;
     margin: 0;
 }
 
@@ -218,7 +218,7 @@ div .dot {
     border-bottom: solid 1px #E9ECEB;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
-    background-color: white;
+    background-color: #F7FAFA;
     padding: 20px;
     display: block;
 }
@@ -393,7 +393,7 @@ div .dot {
 }
 
 .habit-field.opened {
-    background: white;
+    background: #F7FAFA;
     margin: 0;
     padding: 20px;
     overflow-y: auto;
@@ -413,28 +413,6 @@ div .dot {
     margin-bottom: 15px;
 }
 
-.habit-input {
-    position: relative;
-    display: flex;
-    transition: all 0.25s ease-in-out;
-    margin: 20px auto;
-    padding: 0 15px;
-    justify-content: space-between;
-    align-items: stretch;
-}
-
-.habit-input>input {
-    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
-    width: 90%;
-    outline: none;
-    display: inline-block;
-    font-size: 18px;
-    border: solid 2px #D2C4FA;
-    border-radius: 10px;
-    z-index: 10;
-    padding: 10px;
-    margin-right: 10px;
-}
 
 .save-button {
     border-radius: 10px;
@@ -561,4 +539,149 @@ div .dot {
 }
 .install-button p {
     margin-left: 10px;
+}
+
+footer {
+    display: flex;
+    justify-content: center;
+}
+.navigation-bar {
+    width: 100%;
+    max-width: 760px;
+    height: 71px;
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    background-color: white;
+    z-index: 20;
+    justify-content: center;
+    align-items: center;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    
+}
+
+#add-new-habit-button {
+    height: 75%;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    background-color: #2E0D5F;
+    border: none;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    color: white;
+    font-size: 40px;
+    cursor: pointer;
+}
+
+.add-new-habit-field {
+    z-index: 30;
+    width: 100%;
+    max-width: 760px;
+    height: 98%;
+    position: fixed;
+    bottom: 0;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    background-color: white;
+}
+
+#add-new-habit-bar {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px;
+
+}
+#add-new-habit-bar > button {
+    border: none;
+    padding: 10px;
+    letter-spacing: 1px;
+    background-color: transparent;
+    color: #8152FF;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#input-field {
+    background: #F7FAFA;
+    height: 100%;
+    padding: 20px;
+}
+
+.habit-input {
+    position: relative;
+    display: flex;
+    transition: all 0.25s ease-in-out;
+    margin: 0 auto;
+    padding: 0 15px;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+.habit-input>input {
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    width: 100%;
+    outline: none;
+    display: inline-block;
+    font-size: 18px;
+    border: solid 2px #D2C4FA;
+    border-radius: 10px;
+    z-index: 10;
+    padding: 10px;
+}
+
+.checkbox-input {
+    display: none;
+  }
+  .checkbox-input:checked + label .checkbox:after {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  .checkbox {
+    border: 1px solid blue;
+    border-radius: 3px;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    position: relative;
+  }
+  .checkbox:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 12px;
+    height: 12px;
+    background-color: blue;
+    border-radius: 3px;
+    transition: 0.3s;
+  }
+
+.repeat {
+    padding: 15px;
+}
+.default-repeat {
+    display: flex;
+    align-items: center;
+}
+.default-repeat > i {
+    margin: 0;
+    margin-right: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #41D996;
+    color: #F7FAFA;
+}
+
+.option-title {
+    color: #8299A1;
+}
+
+.expand-repeat-option {
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 15px 0;
 }
