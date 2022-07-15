@@ -130,6 +130,14 @@ function getDateArr(dayInterval, startDate) {
     return dateArr;
 }
 
+// 
+const getMonthName = (month) => {
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May",
+        "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+    ];
+    return monthNames[parseInt(month)-1];
+}
+
 // customize date format
 function formatDate(unixTime, toDisplay = true) {
     const newDate = new Date(unixTime);
@@ -145,20 +153,6 @@ function formatDate(unixTime, toDisplay = true) {
         "Thu",
         "Fri",
         "Sat",
-    ];
-    const monthNames = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
     ];
     if (toDisplay) {
         return [
@@ -317,12 +311,15 @@ function createNewHabitItemDiv(
 }
 
 // add new habit to localStorage
-function addNewHabit(habitId, habitName) {
-    createdTime = selectedDate === formatDate(getUnixTimeToday(), false) ? getUnixTimeToday() : new Date(selectedDate).getTime();
+function addNewHabit(habitId, habitName, startDate, schedule) {
+    habitName = habitName.length === 0 ? "Your habit" : habitName;
+    createdTime = getUnixTimeToday();
     allHabits[habitId] = {
-        createAt: createdTime,
+        createdAt: createdTime,
+        startedAt: startDate,
         name: habitName,
-        deleteAt: null,
+        deletedAt: null,
+        schedule: schedule
     };
 }
 

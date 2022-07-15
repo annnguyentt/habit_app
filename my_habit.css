@@ -149,25 +149,30 @@ div .dot {
     justify-content: center;
     flex-direction: column;
 }
+
 .date.today {
     color: #6C30FF;
 }
+
 .date.today h3 {
     font-weight: 700;
 }
+
 .date.selected {
     color: #2E0D5F;
     background-color: #FFE188;
     border: solid 1px #F7E0BD;
 }
+
 .date.selected h3 {
     font-weight: 700;
 }
+
 .date h3 {
     margin: 2px;
     font-weight: 400;
     font-size: 14px;
-    text-transform:uppercase;
+    text-transform: uppercase;
 }
 
 .date p {
@@ -531,12 +536,13 @@ div .dot {
     bottom: 20px;
     right: 20px;
     border-radius: 20px;
-    background: linear-gradient(45deg, rgba(254,214,13,1) 0%, rgba(108,46,212,1) 100%);
+    background: linear-gradient(45deg, rgba(254, 214, 13, 1) 0%, rgba(108, 46, 212, 1) 100%);
     color: white;
     width: 100px;
     justify-content: center;
     height: 30px;
 }
+
 .install-button p {
     margin-left: 10px;
 }
@@ -545,6 +551,7 @@ footer {
     display: flex;
     justify-content: center;
 }
+
 .navigation-bar {
     width: 100%;
     max-width: 760px;
@@ -558,7 +565,7 @@ footer {
     align-items: center;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
-    
+
 }
 
 #add-new-habit-button {
@@ -583,6 +590,12 @@ footer {
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     background-color: white;
+    transform: translateY(100%);
+    transition: all 0.35s ease-in;
+}
+
+.add-new-habit-field.opened {
+    transform: translateY(0);
 }
 
 #add-new-habit-bar {
@@ -591,7 +604,8 @@ footer {
     margin: 20px;
 
 }
-#add-new-habit-bar > button {
+
+#add-new-habit-bar>button {
     border: none;
     padding: 10px;
     letter-spacing: 1px;
@@ -629,21 +643,59 @@ footer {
     padding: 10px;
 }
 
+.schedule {
+    margin-top: 30px;
+}
+
+.intro-section {
+    display: flex;
+    align-items: center;
+}
+
+.intro-section>i {
+    margin: 0;
+    margin-right: 10px;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: #41D996;
+    color: #F7FAFA;
+}
+
+
+.option-title {
+    color: #8299A1;
+    text-transform: uppercase;
+}
+
+.schedule-option {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.schedule-option>label {
+    margin-right: 5px;
+}
+
 .checkbox-input {
     display: none;
-  }
-  .checkbox-input:checked + label .checkbox:after {
+}
+
+.checkbox-input:checked+label .checkbox:after {
     transform: translate(-50%, -50%) scale(1);
-  }
-  .checkbox {
-    border: 1px solid blue;
+}
+
+.checkbox {
+    border: 1px solid #8152FF;
     border-radius: 3px;
     width: 16px;
     height: 16px;
     display: inline-block;
     position: relative;
-  }
-  .checkbox:after {
+    margin-right: 2px;
+}
+
+.checkbox:after {
     content: '';
     display: block;
     position: absolute;
@@ -652,36 +704,56 @@ footer {
     transform: translate(-50%, -50%) scale(0);
     width: 12px;
     height: 12px;
-    background-color: blue;
+    background-color: #8152FF;
     border-radius: 3px;
     transition: 0.3s;
-  }
+}
 
-.repeat {
-    padding: 15px;
+.start-date {
+    margin-top: 30px;
 }
-.default-repeat {
-    display: flex;
-    align-items: center;
-}
-.default-repeat > i {
+
+.start-date>.intro-section>i {
     margin: 0;
-    margin-right: 20px;
-    padding: 20px;
+    margin-right: 10px;
+    padding: 15px;
     border-radius: 10px;
-    background-color: #41D996;
+    background-color: #F83EB0;
     color: #F7FAFA;
+    font-size: 20px;
 }
 
-.option-title {
-    color: #8299A1;
-}
-
-.expand-repeat-option {
+#month-year {
+    text-align: center;
+    padding: 5px;
+    font-size: 17px;
+    margin: 10px auto;
+    border-bottom: solid 0.5px rgba(0, 0, 0, 0.271);
+    text-transform: uppercase;
+    word-spacing: 1px;
     font-weight: 600;
+}
+.day-option {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.day-in-calendar {
+    padding: 7px;
+    width: 35px;
+    aspect-ratio: 1/1;
+    margin: 0;
     cursor: pointer;
     display: flex;
     align-items: center;
-    margin: 0;
-    padding: 15px 0;
+    justify-content: center;
+}
+.day-in-calendar.today {
+    color: #6C30FF;
+    font-weight: 600;
+}
+.day-in-calendar.selected {
+    background-color: #ECE5FC;
+    border-radius: 50%;
+    font-weight: 600;
 }
