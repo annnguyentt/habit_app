@@ -130,7 +130,7 @@ function getDateArr(dayInterval, startDate) {
     return dateArr;
 }
 
-// 
+// get name of the month
 const getMonthName = (month) => {
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May",
         "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
@@ -138,13 +138,8 @@ const getMonthName = (month) => {
     return monthNames[parseInt(month)-1];
 }
 
-// customize date format
-function formatDate(unixTime, toDisplay = true) {
-    const newDate = new Date(unixTime);
-    const weekDay = newDate.getDay();
-    const dd = String(newDate.getDate()).padStart(2, "0");
-    const mm = ("0" + (newDate.getMonth() + 1)).slice(-2);
-    const yyyy = newDate.getFullYear();
+// get name of the day
+const getDayName = (weekDay) => {
     const dayNames = [
         "Sun",
         "Mon",
@@ -154,9 +149,20 @@ function formatDate(unixTime, toDisplay = true) {
         "Fri",
         "Sat",
     ];
+    return dayNames[weekDay];
+}
+
+// customize date format
+function formatDate(unixTime, toDisplay = true) {
+    const newDate = new Date(unixTime);
+    const weekDay = newDate.getDay();
+    const dd = String(newDate.getDate()).padStart(2, "0");
+    const mm = ("0" + (newDate.getMonth() + 1)).slice(-2);
+    const yyyy = newDate.getFullYear();
+    
     if (toDisplay) {
         return [
-            dayNames[weekDay], dd, `${yyyy}-${mm}-${dd}`
+            getDayName(weekDay), dd, `${yyyy}-${mm}-${dd}`
         ];
     } else {
         return `${yyyy}-${mm}-${dd}`;

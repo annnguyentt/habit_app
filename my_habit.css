@@ -66,6 +66,10 @@ h1 {
     background-color: #F3F8F9;
 }
 
+.header.stop-scrolling {
+    overflow: hidden;
+}
+
 .wrapper {
     height: 100%;
     width: 100%;
@@ -584,7 +588,7 @@ footer {
     z-index: 30;
     width: 100%;
     max-width: 760px;
-    height: 98%;
+    height: 95%;
     position: fixed;
     bottom: 0;
     border-top-left-radius: 20px;
@@ -592,6 +596,7 @@ footer {
     background-color: white;
     transform: translateY(100%);
     transition: all 0.35s ease-in;
+    overflow-y: auto;
 }
 
 .add-new-habit-field.opened {
@@ -650,12 +655,14 @@ footer {
 .intro-section {
     display: flex;
     align-items: center;
+    z-index: 30;
+    background-color: #F7FAFA;
 }
 
 .intro-section>i {
     margin: 0;
     margin-right: 10px;
-    padding: 15px;
+    padding: 20px;
     border-radius: 10px;
     background-color: #41D996;
     color: #F7FAFA;
@@ -665,16 +672,37 @@ footer {
 .option-title {
     color: #8299A1;
     text-transform: uppercase;
+    margin: 0;
 }
 
+.selected-schedule {
+    font-size: 18px;
+    margin: 0;
+    padding: 10px;
+    padding-left: 0;
+    padding-bottom: 0;
+    cursor: pointer;
+}
+
+.selected-schedule::after {
+    content: "\25bc";
+    text-align: center;
+    margin-left: 5px;
+}
 .schedule-option {
-    margin-top: 15px;
+    display: none;
+}
+
+.schedule-option.opened {
     display: flex;
-    justify-content: space-evenly;
+    flex-direction: column;
+    margin: 20px auto;
+    width: 65%;
 }
 
 .schedule-option>label {
-    margin-right: 5px;
+    margin-bottom: 10px;
+    padding: 5px;
 }
 
 .checkbox-input {
@@ -692,7 +720,7 @@ footer {
     height: 16px;
     display: inline-block;
     position: relative;
-    margin-right: 2px;
+    margin-right: 10px;
 }
 
 .checkbox:after {
@@ -734,8 +762,9 @@ footer {
     font-weight: 600;
 }
 .day-option {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-rows: repeat(8);
+    grid-template-columns: repeat(7, 1fr);
 }
 
 .day-in-calendar {

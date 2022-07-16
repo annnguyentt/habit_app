@@ -123,8 +123,6 @@ document.addEventListener("click", function (event) {
     }
 });
 
-
-
 // get num of days in the month
 const getDays = (year, month) => {
     return {
@@ -134,44 +132,80 @@ const getDays = (year, month) => {
     }
 };
 
-const daysOfMonth = getDays((new Date(today)).getFullYear(), (new Date(today)).getMonth() + 1);
-const calendar = document.querySelector('.day-option');
-let startDate = today;
-for (let i = 1; i <= daysOfMonth['numOfDays']; i++) {
-    let fullDate = formatDate(new Date(daysOfMonth['year'] + "-" + daysOfMonth['month'] + "-" + i), false);
-    let dayElement = document.createElement('p');
-    dayElement.classList.add('day-in-calendar');
-    dayElement.innerHTML = `<span>${i}</span>`;
-    dayElement.setAttribute('data-calendar-date', fullDate);
-    if (fullDate === today) {
-        dayElement.classList.add('today', 'selected');
+function generateBlankDayElement(dayOfWeek) {
+    let calendar = document.querySelector('.day-option');
+    if (dayOfWeek > 0) {
+        for (let i = 1; i <= dayOfWeek; i++) {
+            let blankDayElement = document.createElement('p');
+            blankDayElement.innerHTML = `<span></span>`;
+            calendar.appendChild(blankDayElement);
+        }
     }
-    dayElement.addEventListener('click', function () {
-        const allDayElements = document.querySelectorAll('.day-in-calendar');
-        allDayElements.forEach(item => item.classList.remove('selected'));
-        dayElement.classList.add('selected');
-        startDate = dayElement.getAttribute('data-calendar-date');
-    })
-    calendar.appendChild(dayElement)
 }
 
-const monthAndYear = document.querySelector('#month-year');
-monthAndYear.innerText = getMonthName(daysOfMonth['month']) + ' ' + daysOfMonth['year'];
+// highlight selected day
+function selectDayInCalendar(dayElement) {
+    let allDayElements = document.querySelectorAll('.day-in-calendar');
+    allDayElements.forEach(item => item.classList.remove('selected'));
+    dayElement.classList.add('selected');
+}
 
+// generate a calendar of the month of today when clicking "add new habit" button
+function generateCalendarOfTheMonth(date) {
+    let daysOfMonth = getDays((new Date(date)).getFullYear(), (new Date(date)).getMonth() + 1);
+    /* update the month and year of the calendar */
+    let monthAndYear = document.querySelector('#month-year');
+    monthAndYear.innerText = getMonthName(daysOfMonth['month']) + ' ' + daysOfMonth['year'];
+    /* calendar to display */ 
+    let calendar = document.querySelector('.day-option');
+    for (let i = 1; i <= daysOfMonth['numOfDays']; i++) {
+        let fullDate = formatDate(new Date(daysOfMonth['year'] + "-" + daysOfMonth['month'] + "-" + i), false);
+        if (i===1) {
+            generateBlankDayElement((new Date(fullDate).getDay()))
+        }
+        let dayElement = document.createElement('p');
+        dayElement.classList.add('day-in-calendar');
+        dayElement.innerHTML = `<span>${i}</span>`;
+        dayElement.setAttribute('data-calendar-date', fullDate);
+        /* default selection is today */ 
+        if (fullDate === today) {
+            dayElement.classList.add('today', 'selected');
+        }
+        dayElement.addEventListener('click', function () {
+            selectDayInCalendar(dayElement);
+        })
+        calendar.appendChild(dayElement)
+    }
+}
+
+// select schedule
+const selecteSchedule = document.querySelector('.selected-schedule');
+function getSelectedSchedule() {
+
+}
+
+// click add new habit button
 const addNewHabitButton = document.querySelector('#add-new-habit-button');
 const addNewHabitField = document.querySelector('.add-new-habit-field');
 const habitNameInput = document.querySelector('#habit-name');
+const header = document.querySelector('.header');
 
 addNewHabitButton.addEventListener('click', function () {
     habitNameInput.focus();
     addNewHabitField.classList.add('opened');
+    header.classList.add('.stop-scrolling');
+    generateCalendarOfTheMonth(today);
 })
 
+
+// click cancel button
 const cancelButton = addNewHabitField.querySelector('#cancel-button');
 cancelButton.addEventListener('click', function () {
     addNewHabitField.classList.remove('opened');
+    header.classList.remove('.stop-scrolling');
 });
 
+// click save button
 const saveButton = addNewHabitField.querySelector('#save-button');
 saveButton.addEventListener('click', function () {
     const habitName = document.querySelector("#habit-name").value;
