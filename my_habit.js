@@ -1,3 +1,50 @@
+// return selected day names in the schedule section
+function getSelectedDayName() {
+    const allScheduleOptions = document.querySelectorAll('.checkbox-input');
+    let selectedDayName = [];
+    for (let item of allScheduleOptions) {
+        if (item.checked) {
+            selectedDayName.push(item.id)
+        }
+    }
+    return selectedDayName;
+}
+
+// replace content of selected-items
+function replaceContentSelectedItems() {
+    let selectedDayNameArr = getSelectedDayName(),
+        numOfSelectedDayNames = selectedDayNameArr.length,
+        scheduleSection = document.querySelector('.schedule'),
+        selectedScheduleToDisplay = scheduleSection.querySelector('.selected-items');
+
+    if (numOfSelectedDayNames === 7) {
+        selectedScheduleToDisplay.innerText = 'Everyday'
+    } else if ((numOfSelectedDayNames > 0) && (numOfSelectedDayNames < 7)) {
+        selectedScheduleToDisplay.innerText = selectedDayNameArr.join(', ');
+    } else {
+        selectedScheduleToDisplay.innerText = 'No Repeat'
+    }
+}
+
+// change how the selected items display when ticking checkboxes
+function displaySelectedDayName(checkbox) {
+    checkbox.addEventListener('click', function () {
+        replaceContentSelectedItems();
+    })
+}
+// whether user returns to the main screen or not 
+function returnToMainScreen(isReturned = true) {
+    const addNewHabitField = document.querySelector('.add-new-habit-field');
+    const header = document.querySelector('.header');
+    if (isReturned) {
+        addNewHabitField.classList.remove('opened');
+        header.classList.remove('.stop-scrolling');
+    } else {
+        addNewHabitField.classList.add('opened');
+        header.classList.add('.stop-scrolling');
+    }
+}
+
 /* SHOW CHOSEN DATE ON MAIN PAGE */
 let today = formatDate(getUnixTimeToday(), false),
     selectedDate = today;
@@ -42,21 +89,17 @@ showableDates.addEventListener('click', function (event) {
     If there is no habits stored in localStorage, the app will display "add-new-habit" layout.
     Otherwise, "habit-input" will be shown
 */
-const audio = new Audio("sound_effect/8SUM472-click-casual-digital.mp3");
 const habitTracking = retrieveDataFromLocal("habitTracking");
 const allHabits = habitTracking["habits"];
 const allRecords = habitTracking["records"];
 
-const addNewButton = document.querySelector(".add-new-habit");
-const blankHabit = document.querySelector(".habit-input");
-
 function displayItemsOfSelectedDate(selectedDate) {
-    let numActiveHabits = getActiveHabitIds(selectedDate).length;
+    let habitField = document.querySelector('.habit-field');
+        numActiveHabits = getActiveHabitIds(selectedDate).length;
     displayActiveHabits(numActiveHabits);
     document.querySelectorAll('.habit-display').forEach(e => e.remove());
     if (numActiveHabits >= 1) {
         openMainPage();
-
         let idx = 0;
         let allActiveHabitIds = getSortedHabitArray(getActiveHabitIds(selectedDate));
         for (let habitId of allActiveHabitIds) {
@@ -68,14 +111,10 @@ function displayItemsOfSelectedDate(selectedDate) {
                 idx,
                 selectedDate
             );
-            insertBeforeANode(blankHabit, newHabit);
+            habitField.appendChild(newHabit);
             idx += 1;
         }
     }
-
-    addNewButton.addEventListener("click", function () {
-        openMainPage();
-    });
 }
 
 displayItemsOfSelectedDate(selectedDate);
@@ -123,124 +162,81 @@ document.addEventListener("click", function (event) {
     }
 });
 
-// get num of days in the month
-const getDays = (year, month) => {
-    return {
-        "numOfDays": new Date(year, month, 0).getDate(),
-        "month": month,
-        "year": year
-    }
-};
-
-function generateBlankDayElement(dayOfWeek) {
-    let calendar = document.querySelector('.day-option');
-    if (dayOfWeek > 0) {
-        for (let i = 1; i <= dayOfWeek; i++) {
-            let blankDayElement = document.createElement('p');
-            blankDayElement.innerHTML = `<span></span>`;
-            calendar.appendChild(blankDayElement);
-        }
-    }
-}
-
-// highlight selected day
-function selectDayInCalendar(dayElement) {
-    let allDayElements = document.querySelectorAll('.day-in-calendar');
-    allDayElements.forEach(item => item.classList.remove('selected'));
-    dayElement.classList.add('selected');
-}
-
-// generate a calendar of the month of today when clicking "add new habit" button
-function generateCalendarOfTheMonth(date) {
-    let daysOfMonth = getDays((new Date(date)).getFullYear(), (new Date(date)).getMonth() + 1);
-    /* update the month and year of the calendar */
-    let monthAndYear = document.querySelector('#month-year');
-    monthAndYear.innerText = getMonthName(daysOfMonth['month']) + ' ' + daysOfMonth['year'];
-    /* calendar to display */ 
-    let calendar = document.querySelector('.day-option');
-    for (let i = 1; i <= daysOfMonth['numOfDays']; i++) {
-        let fullDate = formatDate(new Date(daysOfMonth['year'] + "-" + daysOfMonth['month'] + "-" + i), false);
-        if (i===1) {
-            generateBlankDayElement((new Date(fullDate).getDay()))
-        }
-        let dayElement = document.createElement('p');
-        dayElement.classList.add('day-in-calendar');
-        dayElement.innerHTML = `<span>${i}</span>`;
-        dayElement.setAttribute('data-calendar-date', fullDate);
-        /* default selection is today */ 
-        if (fullDate === today) {
-            dayElement.classList.add('today', 'selected');
-        }
-        dayElement.addEventListener('click', function () {
-            selectDayInCalendar(dayElement);
-        })
-        calendar.appendChild(dayElement)
-    }
-}
-
-// select schedule
-const selecteSchedule = document.querySelector('.selected-schedule');
-function getSelectedSchedule() {
-
-}
-
-// click add new habit button
+/* CLICK ADD NEW HABIT BUTTON */
 const addNewHabitButton = document.querySelector('#add-new-habit-button');
 const addNewHabitField = document.querySelector('.add-new-habit-field');
 const habitNameInput = document.querySelector('#habit-name');
-const header = document.querySelector('.header');
 
 addNewHabitButton.addEventListener('click', function () {
+    // focus to the input field first
     habitNameInput.focus();
-    addNewHabitField.classList.add('opened');
-    header.classList.add('.stop-scrolling');
-    generateCalendarOfTheMonth(today);
+    // remove main screen
+    returnToMainScreen(false);
+    // default status of all checkboxes is true
+    const allScheduleOptions = document.querySelectorAll('.checkbox-input');
+    allScheduleOptions.forEach(item => item.checked = true);
+    // show everyday on selected items field
+    replaceContentSelectedItems();
+    // defaultly display start date is today
+    document.querySelector('#startdate').value = today;
 })
 
 
-// click cancel button
+/* CLICK CANCEL BUTTON */
 const cancelButton = addNewHabitField.querySelector('#cancel-button');
 cancelButton.addEventListener('click', function () {
-    addNewHabitField.classList.remove('opened');
-    header.classList.remove('.stop-scrolling');
+    returnToMainScreen(true)
 });
 
-// click save button
+/* OPEN SCHEDULE OPTIONS */
+let scheduleSection = document.querySelector('.schedule');
+selectedScheduleToDisplay = scheduleSection.querySelector('.selected-items');
+selectedScheduleToDisplay.addEventListener('click', function () {
+    let scheduleOption = document.querySelector('.schedule-option');
+    if (scheduleOption.classList.contains('opened')) {
+        scheduleOption.classList.remove('opened');
+    } else {
+        scheduleOption.classList.add('opened');
+    }
+})
+
+/* DISPLAY SELECTED DAY NAMES */
+const allScheduleOptions = document.querySelectorAll('.checkbox-input');
+allScheduleOptions.forEach(item => displaySelectedDayName(item));
+
+/* CLICK SAVE BUTTON */
 const saveButton = addNewHabitField.querySelector('#save-button');
 saveButton.addEventListener('click', function () {
     const habitName = document.querySelector("#habit-name").value;
     const habitId = getUnixTimeToday();
-    const allDaysInCalendar = document.querySelectorAll('.day-in-calendar');
-    let startDate = today;
-    allDaysInCalendar.forEach(item => item.classList.contains('selected')
-        ? startDate = item.getAttribute('data-calendar-date') : startDate);
-
-    const allScheduleOptions = document.querySelectorAll('.checkbox-input');
-    let selectedSchedule = [];
-    for (let item of allScheduleOptions) {
-        if (item.checked) {
-            selectedSchedule.push(item.id.toUpperCase())
-        }
-    }
+    let startDate = document.querySelector('#startdate').value;
+    const selectedDayName = getSelectedDayName();
 
     // add the new habit to local storage first
-    addNewHabit(habitId, habitName, startDate, selectedSchedule);
+    addNewHabit(habitId, habitName, startDate, selectedDayName);
     updateRecord(habitId, false, startDate);
     storeToLocalStorage(habitTracking, "habitTracking");
-    // create new habit div
-    const newHabitDiv = createNewHabitItemDiv(
-        habitId,
-        habitName,
-        false,
-        getLenOfObject(allHabits),
-        selectedDate
-    );
-    // inseart into layout before the blank habit
-    insertBeforeANode(blankHabit, newHabitDiv);
-    // re-count number of active habits to display on banner
-    let numActiveHabits = getActiveHabitIds(selectedDate).length;
-    displayActiveHabits(numActiveHabits);
+
+    // // create new habit div
+    // const newHabitDiv = createNewHabitItemDiv(
+    //     habitId,
+    //     habitName,
+    //     false,
+    //     getLenOfObject(allHabits),
+    //     selectedDate
+    // );
+
+    // // inseart into layout before the blank habit
+    // insertBeforeANode(blankHabit, newHabitDiv);
+    // // re-count number of active habits to display on banner
+    // let numActiveHabits = getActiveHabitIds(selectedDate).length;
+    // displayActiveHabits(numActiveHabits);
+    // updateProgressBar(selectedDate);
+
     // clear the input value after saving
-    blankHabit.querySelector("input").value = "";
-    updateProgressBar(selectedDate);
+    document.querySelector("#habit-name").value = "";
+    // return to the main screen
+    returnToMainScreen(true);
 })
+
+

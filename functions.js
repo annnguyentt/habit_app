@@ -27,9 +27,14 @@ function getLenOfObject(Obj) {
 // get the array of active habits
 function getActiveHabitIds(selectedDate) {
     let activeHabits = [];
-
     for (let [habitId, habitIdProp] of Object.entries(allHabits)) {
-        if (formatDate(habitIdProp["createAt"], false) <= selectedDate) {
+        if ((habitIdProp['startedAt'] === selectedDate)
+            && (!habitIdProp['schedule'])) {
+            activeHabits.push(habitId);
+        }
+        else if ((habitIdProp['startedAt'] <= selectedDate)
+            && (habitIdProp['schedule'].includes(getDayName((new Date(selectedDate).getDay()))))
+        ) {
             if (
                 (!habitIdProp["deleteAt"])
                 ||
@@ -62,7 +67,7 @@ function displayActiveHabits(numActiveHabits) {
     const header = document.querySelector(".header");
     header.querySelector(
         "p"
-    ).innerText = `You have ${numActiveHabits} to-do ${numActiveHabits > 1? "items" : "item"} today`;
+    ).innerText = `You have ${numActiveHabits} to-do ${numActiveHabits > 1 ? "items" : "item"} today`;
 }
 
 // update progress bar
@@ -93,8 +98,8 @@ function updateProgressBar(selectedDate) {
         confetti({
             angle: 140,
             spread: 55,
-            origin: { x: 0.95 , y: 0.4}
-          });
+            origin: { x: 0.95, y: 0.4 }
+        });
     }
 }
 
@@ -135,7 +140,7 @@ const getMonthName = (month) => {
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May",
         "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
     ];
-    return monthNames[parseInt(month)-1];
+    return monthNames[parseInt(month) - 1];
 }
 
 // get name of the day
@@ -159,7 +164,7 @@ function formatDate(unixTime, toDisplay = true) {
     const dd = String(newDate.getDate()).padStart(2, "0");
     const mm = ("0" + (newDate.getMonth() + 1)).slice(-2);
     const yyyy = newDate.getFullYear();
-    
+
     if (toDisplay) {
         return [
             getDayName(weekDay), dd, `${yyyy}-${mm}-${dd}`
@@ -172,8 +177,8 @@ function formatDate(unixTime, toDisplay = true) {
 // open main page
 function openMainPage() {
     let addNewButton = document.querySelector(".add-new-habit"),
-    habitField = document.querySelector(".habit-field"),
-    dailyProgress = document.querySelector(".daily-progress");
+        habitField = document.querySelector(".habit-field"),
+        dailyProgress = document.querySelector(".daily-progress");
 
     addNewButton.classList.add("clicked");
     habitField.classList.add("opened");
@@ -227,6 +232,7 @@ function countNumDaysStreak(arr) {
 }
 
 // add event listener to checkbox and update results to local storage
+const audio = new Audio("sound_effect/8SUM472-click-casual-digital.mp3");
 function addEventListenerToCheckbox(element, selectedDate) {
     const habitCheckbox = element.querySelector(".habit-checkbox");
     habitCheckbox.addEventListener("click", function () {
