@@ -28,17 +28,20 @@ function getLenOfObject(Obj) {
 function getActiveHabitIds(selectedDate) {
     let activeHabits = [];
     for (let [habitId, habitIdProp] of Object.entries(allHabits)) {
-        if ((habitIdProp['startedAt'] === selectedDate)
-            && (!habitIdProp['schedule'])) {
+        if (
+            habitIdProp["startedAt"] === selectedDate &&
+            habitIdProp["schedule"].length === 0
+        ) {
             activeHabits.push(habitId);
-        }
-        else if ((habitIdProp['startedAt'] <= selectedDate)
-            && (habitIdProp['schedule'].includes(getDayName((new Date(selectedDate).getDay()))))
+        } else if (
+            habitIdProp["startedAt"] <= selectedDate &&
+            habitIdProp["schedule"].includes(
+                getDayName(new Date(selectedDate).getDay())
+            )
         ) {
             if (
-                (!habitIdProp["deleteAt"])
-                ||
-                (formatDate(habitIdProp["deleteAt"], false) > selectedDate)
+                !habitIdProp["deleteAt"] ||
+                formatDate(habitIdProp["deleteAt"], false) > selectedDate
             ) {
                 activeHabits.push(habitId);
             }
@@ -65,14 +68,23 @@ function getDoneHabitIds(selectedDate) {
 // display num of active habits on the chosen date
 function displayActiveHabits(numActiveHabits) {
     const header = document.querySelector(".header");
-    header.querySelector(
-        "p"
-    ).innerText = `You have ${numActiveHabits} to-do ${numActiveHabits > 1 ? "items" : "item"} today`;
+    header.querySelector("p").innerText = `You have ${numActiveHabits} to-do ${numActiveHabits > 1 ? "items" : "item"
+        } ${selectedDate === today ? "today" : ""}`;
+}
+
+// calculate the pct of done habits
+function calDoneHabitsPCT(selectedDate) {
+    const progressPCT = Math.round(
+        (getDoneHabitIds(selectedDate).length /
+            getActiveHabitIds(selectedDate).length) *
+        100
+    );
+    return progressPCT;
 }
 
 // update progress bar
 function updateProgressBar(selectedDate) {
-    let progressPCT = Math.round((getDoneHabitIds(selectedDate).length / getActiveHabitIds(selectedDate).length) * 100),
+    let progressPCT = calDoneHabitsPCT(selectedDate),
         habitProgress = document.querySelector("#all-habits-progress"),
         progressTitle = document.querySelector(".daily-progress-title"),
         quote = progressTitle.querySelector("#quote"),
@@ -95,11 +107,6 @@ function updateProgressBar(selectedDate) {
     } else if (progressPCT === 100) {
         quote.innerText = "All habits are completed. Stay ahead!";
         habitProgress.classList.add("completed");
-        confetti({
-            angle: 140,
-            spread: 55,
-            origin: { x: 0.95, y: 0.4 }
-        });
     }
 }
 
@@ -137,25 +144,28 @@ function getDateArr(dayInterval, startDate) {
 
 // get name of the month
 const getMonthName = (month) => {
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May",
-        "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+    const monthNames = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
     ];
     return monthNames[parseInt(month) - 1];
-}
+};
 
 // get name of the day
 const getDayName = (weekDay) => {
-    const dayNames = [
-        "Sun",
-        "Mon",
-        "Tue",
-        "Wed",
-        "Thu",
-        "Fri",
-        "Sat",
-    ];
+    const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     return dayNames[weekDay];
-}
+};
 
 // customize date format
 function formatDate(unixTime, toDisplay = true) {
@@ -166,9 +176,7 @@ function formatDate(unixTime, toDisplay = true) {
     const yyyy = newDate.getFullYear();
 
     if (toDisplay) {
-        return [
-            getDayName(weekDay), dd, `${yyyy}-${mm}-${dd}`
-        ];
+        return [getDayName(weekDay), dd, `${yyyy}-${mm}-${dd}`];
     } else {
         return `${yyyy}-${mm}-${dd}`;
     }
@@ -179,28 +187,76 @@ function openMainPage() {
     let addNewButton = document.querySelector(".add-new-habit"),
         habitField = document.querySelector(".habit-field"),
         dailyProgress = document.querySelector(".daily-progress");
-
     addNewButton.classList.add("clicked");
     habitField.classList.add("opened");
     dailyProgress.classList.add("opened");
     updateProgressBar(selectedDate);
 }
 
+// get first and last date of a date
+function getFirstLastDateOfWeek(date, firstDayOfWeek = 'mon') {
+    let newDate = new Date(date),
+        wkStart, wkEnd;
+
+    if (firstDayOfWeek === 'mon') {
+        const currentWeekDay = newDate.getDay();
+        const lessDays = currentWeekDay === 0 ? 6 : currentWeekDay - 1;
+        wkStart = new Date(new Date(newDate).setDate(newDate.getDate() - lessDays));
+        wkEnd = new Date(new Date(wkStart).setDate(wkStart.getDate() + 6));
+    } else if (firstDayOfWeek === 'sun') {
+        const first = newDate.getDate() - newDate.getDay();
+        const last = first + 6;
+        wkStart = new Date(newDate.setDate(first));
+        wkEnd = new Date(newDate.setDate(last));
+    }
+    wkStart = formatDate(wkStart.getTime(), false);
+    wkEnd = formatDate(wkEnd.getTime(), false);
+
+    return [wkStart, wkEnd];
+}
+
 // get habit result to insert to habit-result class
+function getNumCompletionOfHabitId(habitId, selectedDate) {
+    let recordsOfHabit = retrieveDataFromLocal("habitTracking")["records"][habitId];
+    recordsOfHabit = recordsOfHabit ? recordsOfHabit : {};
+
+    let habitSchedule = retrieveDataFromLocal("habitTracking")["habits"][habitId]['schedule'];
+    numOfTimesPerWeek = habitSchedule.length;
+
+    const completedDates = Object.keys(recordsOfHabit)
+        .filter(key =>
+            (recordsOfHabit[key] === true)
+            && (getFirstLastDateOfWeek(selectedDate)[0] === getFirstLastDateOfWeek(key)[0])
+        );
+    numOfDoneTimesPerWeek = completedDates.length;
+
+    return [numOfDoneTimesPerWeek, numOfTimesPerWeek];
+}
+
+
 function getHabitResult(habitId, selectedDate) {
     /* get all records of the habitID */
-    let recordsOfHabit = retrieveDataFromLocal("habitTracking")['records'][habitId];
-    recordsOfHabit = recordsOfHabit ? recordsOfHabit : {};
-    /* select records smaller than the chosen date and checkbox value is true */
-    const completedDates = Object.keys(recordsOfHabit)
-        .filter((key) => (key <= selectedDate) && (recordsOfHabit[key] === true))
-        .sort().reverse();
+    const resultPerWeek =  getNumCompletionOfHabitId(habitId, selectedDate);
+    numOfDoneTimesPerWeek = resultPerWeek[0];
+    numOfTimesPerWeek = resultPerWeek[1];
 
     let habitResult = "";
 
+    if (numOfTimesPerWeek === 7) {
+        if (numOfDoneTimesPerWeek === 0) {
+            habitResult = "Complete today to have the first streak";
+        }
+        
+    }
+
+
+
     if (getLenOfObject(completedDates) < 1) {
         habitResult = "Complete today to have the first streak";
-    } else if (calTwoStringDates(completedDates[0], selectedDate) <= 86400 * 1000) {
+    } else if (
+        calTwoStringDates(completedDates[0], selectedDate) <=
+        86400 * 1000
+    ) {
         const numDaysStreak = countNumDaysStreak(completedDates);
         habitResult = `${numDaysStreak}-day${numDaysStreak > 1 ? "s" : ""} streak`;
     } else {
@@ -247,20 +303,29 @@ function addEventListenerToCheckbox(element, selectedDate) {
         }
         // update the habit result
         const habitResult = habitCheckbox.parentNode.querySelector(".habit-result");
-        const habitResultNewContent = getHabitResult(
-            habitId,
-            selectedDate
-        );
+        const habitResultNewContent = getHabitResult(habitId, selectedDate);
         habitResult.innerText = habitResultNewContent;
         // update progress bar
         updateProgressBar(selectedDate);
+        // trigger confetti if done habits pct is equal to 100%
+        let progressPCT = calDoneHabitsPCT(selectedDate);
+        if (progressPCT === 100) {
+            confetti({
+                angle: 140,
+                spread: 55,
+                origin: { x: 0.95, y: 0.4 },
+            });
+        }
     });
 }
 
 // add event listener to remove button, and get the habit out of the list if clicking
 function addEventListenerToRemoveButton(element, selectedDate) {
     const removeButton = element.querySelector(".remove-button"),
-        deletedTime = selectedDate === formatDate(getUnixTimeToday(), false) ? getUnixTimeToday() : new Date(selectedDate).getTime();
+        deletedTime =
+            selectedDate === formatDate(getUnixTimeToday(), false)
+                ? getUnixTimeToday()
+                : new Date(selectedDate).getTime();
     removeButton.addEventListener("click", function () {
         const habitId = element.getAttribute("data-habit-id");
         /* update deleteAt property in local storage */
@@ -294,7 +359,7 @@ function createNewHabitItemDiv(
     newHabit.classList.add("habit-display");
     newHabit.setAttribute("data-habit-id", habitId);
     let checkStatus = isDone ? "checked" : "";
-    habitName = (habitName.length < 1) ? "Your habit" : habitName;
+    habitName = habitName.length < 1 ? "Your habit" : habitName;
 
     newHabit.innerHTML = `
             <div class="display-container">
@@ -331,7 +396,7 @@ function addNewHabit(habitId, habitName, startDate, schedule) {
         startedAt: startDate,
         name: habitName,
         deletedAt: null,
-        schedule: schedule
+        schedule: schedule,
     };
 }
 
