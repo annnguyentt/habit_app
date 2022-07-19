@@ -230,44 +230,61 @@ function getNumCompletionOfHabitId(habitId, selectedDate) {
         );
     numOfDoneTimesPerWeek = completedDates.length;
 
-    return [numOfDoneTimesPerWeek, numOfTimesPerWeek];
+    return {
+        'numOfDoneTimesPerWeek': numOfDoneTimesPerWeek
+        , 'numOfTimesPerWeek': numOfTimesPerWeek
+        , 'completedDateArr': completedDates
+    };
 }
 
 
-function getHabitResult(habitId, selectedDate) {
-    /* get all records of the habitID */
-    const resultPerWeek =  getNumCompletionOfHabitId(habitId, selectedDate);
-    numOfDoneTimesPerWeek = resultPerWeek[0];
-    numOfTimesPerWeek = resultPerWeek[1];
+// function getHabitResult(habitId, selectedDate) {
+//     /* get all records of the habitID */
+//     const resultPerWeek = getNumCompletionOfHabitId(habitId, selectedDate);
+//     numOfDoneTimesPerWeek = resultPerWeek['numOfDoneTimesPerWeek']
+//     completedDateArr = resultPerWeek['completedDateArr']
+//     numOfTimesPerWeek = resultPerWeek['numOfTimesPerWeek']
 
-    let habitResult = "";
+//     let habitResult = "", 
+//         firstDateOfWeek = getFirstLastDateOfWeek(selectedDate)
+//         , dateDiff = calTwoStringDates(firstDateOfWeek, selectedDate)
+//         , numDaysStreak = countNumDaysStreak(completedDateArr);
 
-    if (numOfTimesPerWeek === 7) {
-        if (numOfDoneTimesPerWeek === 0) {
-            habitResult = "Complete today to have the first streak";
-        }
-        
-    }
+//     if (numOfTimesPerWeek === 7) {
+//         if (numOfDoneTimesPerWeek === 0) {
+//             habitResult = "Complete today to have the first streak";
+//             return habitResult
+//         } else if ((dateDiff >= numDaysStreak) && (dateDiff <= numDaysStreak + 1)) {
+//             habitResult = `${numDaysStreak}-day${numDaysStreak > 1 ? "s" : ""} streak`;
+//             return habitResult
+//         } else {
+//             habitResult = `Finished ${numOfDoneTimesPerWeek}/${numOfTimesPerWeek} times per week`;
+//             return habitResult
+//         }
+//     }
+//     else if (numOfTimesPerWeek === 0) {
+
+//     }
 
 
 
-    if (getLenOfObject(completedDates) < 1) {
-        habitResult = "Complete today to have the first streak";
-    } else if (
-        calTwoStringDates(completedDates[0], selectedDate) <=
-        86400 * 1000
-    ) {
-        const numDaysStreak = countNumDaysStreak(completedDates);
-        habitResult = `${numDaysStreak}-day${numDaysStreak > 1 ? "s" : ""} streak`;
-    } else {
-        const dateDiff = Math.floor(
-            calTwoStringDates(completedDates[0], selectedDate) / (86400 * 1000)
-        );
-        habitResult = `Completed ${dateDiff} day${dateDiff > 1 ? "s" : ""
-            } ago. Let get it done!!`;
-    }
-    return habitResult;
-}
+//     if (getLenOfObject(completedDates) < 1) {
+//         habitResult = "Complete today to have the first streak";
+//     } else if (
+//         calTwoStringDates(completedDates[0], selectedDate) <=
+//         86400 * 1000
+//     ) {
+//         const numDaysStreak = countNumDaysStreak(completedDates);
+//         habitResult = `${numDaysStreak}-day${numDaysStreak > 1 ? "s" : ""} streak`;
+//     } else {
+//         const dateDiff = Math.floor(
+//             calTwoStringDates(completedDates[0], selectedDate) / (86400 * 1000)
+//         );
+//         habitResult = `Completed ${dateDiff} day${dateDiff > 1 ? "s" : ""
+//             } ago. Let get it done!!`;
+//     }
+//     return habitResult;
+// }
 
 // calculate the difference in millisecond between 2 dates
 function calTwoStringDates(startDate, endDate) {
@@ -275,10 +292,11 @@ function calTwoStringDates(startDate, endDate) {
 }
 
 // count num of days of streak
-function countNumDaysStreak(arr) {
+function countNumDaysStreak(dateArr) {
+    newDateArr = dateArr.sort().reverse();
     let numDaysStreak = 1;
-    for (let day = 1; day < arr.length; day++) {
-        if (calTwoStringDates(arr[day], arr[day - 1]) === 86400 * 1000) {
+    for (let day = 1; day < newDateArr.length; day++) {
+        if (calTwoStringDates(newDateArr[day], newDateArr[day - 1]) === 86400 * 1000) {
             numDaysStreak += 1;
         } else {
             break;
@@ -303,8 +321,8 @@ function addEventListenerToCheckbox(element, selectedDate) {
         }
         // update the habit result
         const habitResult = habitCheckbox.parentNode.querySelector(".habit-result");
-        const habitResultNewContent = getHabitResult(habitId, selectedDate);
-        habitResult.innerText = habitResultNewContent;
+        // const habitResultNewContent = getHabitResult(habitId, selectedDate);
+        // habitResult.innerText = habitResultNewContent;
         // update progress bar
         updateProgressBar(selectedDate);
         // trigger confetti if done habits pct is equal to 100%
@@ -373,8 +391,8 @@ function createNewHabitItemDiv(
             <button class="remove-button"><i class="fa fa-minus-circle" aria-hidden="true"></i></button>
     `;
     // update habit result after changing checkbox click
-    habitResult = getHabitResult(habitId, selectedDate);
-    newHabit.querySelector(".habit-result").innerText = habitResult;
+    // habitResult = getHabitResult(habitId, selectedDate);
+    // newHabit.querySelector(".habit-result").innerText = habitResult;
     // add click event to checkbox
     addEventListenerToCheckbox(newHabit, selectedDate);
     // add click event to remove button

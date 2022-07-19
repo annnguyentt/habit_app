@@ -632,7 +632,7 @@ footer {
     margin-right: 10px;
 }
 
-.schedule {
+.new-habit-setting {
     margin: 15px;
     margin-top: 25px;
 }
@@ -645,14 +645,18 @@ footer {
 }
 
 .intro-section>i {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin: 0;
     margin-right: 10px;
     padding: 20px;
     border-radius: 10px;
-    background-color: #41D996;
     color: #F7FAFA;
+    height: 56px;
+    aspect-ratio: 1/1;
+    font-size: 25px;
 }
-
 
 .option-title {
     color: #8299A1;
@@ -661,7 +665,7 @@ footer {
 }
 
 .selected-items {
-    font-size: 18px;
+    font-size: 17px;
     margin: 0;
     padding: 10px 0;
     cursor: pointer;
@@ -677,16 +681,22 @@ footer {
 }
 
 .schedule-option.opened {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    width: 100%;
+    margin: 20px auto 0 auto;
+    list-style-type: none;
+    padding: 0;
+    text-align: center;
+}
+
+.schedule-option > li {
     display: flex;
     flex-direction: column;
-    padding: 0 15px 0px 15px;
-    width: 100%;
-    margin-top: 10px;
 }
 
 .schedule-option>label {
     margin-bottom: 2px;
-    padding: 5px;
 }
 
 .checkbox-input {
@@ -704,7 +714,7 @@ footer {
     height: 16px;
     display: inline-block;
     position: relative;
-    margin-right: 40px;
+    margin-right: 7px;
 }
 
 .checkbox:after {
@@ -719,21 +729,6 @@ footer {
     background-color: var(--color-base);
     border-radius: 3px;
     transition: 0.3s;
-}
-
-.start-date {
-    margin: 15px;
-    margin-top: 25px;
-}
-
-.start-date>.intro-section>i {
-    margin: 0;
-    margin-right: 10px;
-    padding: 20px;
-    border-radius: 10px;
-    background-color: #F83EB0;
-    color: #F7FAFA;
-    font-size: 20px;
 }
 
 #startdate {
