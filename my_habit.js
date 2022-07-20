@@ -150,6 +150,10 @@ addNewHabitButton.addEventListener("click", function () {
     replaceContentSelectedItems();
     // defaultly display start date is today
     document.querySelector("#startdate").value = today;
+    // defaultly show num of times in the goal section
+    document.querySelector("#num-of-times").value = 1;
+    // defaultly show goal period is week
+    document.querySelector('#goal-period').value = "day";
 });
 
 /* CLICK CANCEL BUTTON */

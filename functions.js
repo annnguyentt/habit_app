@@ -381,12 +381,12 @@ function createNewHabitItemDiv(
 
     newHabit.innerHTML = `
             <div class="display-container">
-                <label class="habit-done" for="checkbox-habit-${habitIndex}"></label>
-                <input class="habit-checkbox" type="checkbox" id="checkbox-habit-${habitIndex} onchange="myfunction()" placeholder="Done" ${checkStatus}>
                 <div class='habit-name'>
                     <h3>${habitName}</h3>
                     <p class='habit-result'></p>
                 </div>
+                <label class="habit-done" for="checkbox-habit-${habitIndex}"></label>
+                <input class="habit-checkbox" type="checkbox" id="checkbox-habit-${habitIndex} onchange="myfunction()" placeholder="Done" ${checkStatus}>
             </div>
             <button class="remove-button"><i class="fa fa-minus-circle" aria-hidden="true"></i></button>
     `;

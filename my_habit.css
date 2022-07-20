@@ -409,6 +409,7 @@ div .dot {
 .habit-field.opened {
     margin: 0;
     padding: 20px;
+    padding-bottom: 85px;
     overflow-y: auto;
     position: relative;
     display: block;
@@ -471,6 +472,7 @@ div .dot {
     width: 100%;
     border-bottom: solid 1px rgba(233, 236, 235, 0.4);
     padding: 15px 0;
+    justify-content: space-between;
 }
 
 .habit-id {
@@ -658,17 +660,25 @@ footer {
     font-size: 25px;
 }
 
+.option {
+    width: 100%;
+    display: inline-block;
+}
+
+.option > p {
+    margin: 0;
+    padding: 6px 0;
+    font-size: 17px;
+}
+
 .option-title {
     color: #8299A1;
-    text-transform: uppercase;
-    margin: 0;
+    text-transform: uppercase;   
 }
 
 .selected-items {
-    font-size: 17px;
-    margin: 0;
-    padding: 10px 0;
     cursor: pointer;
+    font-weight: 600;
 }
 
 .schedule .selected-items::after {
@@ -731,12 +741,23 @@ footer {
     transition: 0.3s;
 }
 
+#num-of-times {
+    font-size: 17px;
+}
+.selected-items > span {
+    margin: 0 6px;
+    font-size: 17px;
+}
+
+#goal-period {
+    font-size: 17px;
+}
+
 #startdate {
     border: none;
     background-color: transparent;
     font-family: var(--font-base);
     font-size: 18px;
     margin: 0;
-    padding: 5px 0;
     cursor: pointer;
 }
