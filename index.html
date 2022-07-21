@@ -166,6 +166,18 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script type="text/javascript" src="functions.js"></script>
     <script type="text/javascript" src="my_habit.js"></script>
+    <script>
+        const numb = document.querySelector(".numb");
+        let counter = 0;
+        setInterval(() => {
+            if (counter == 100) {
+                clearInterval();
+            } else {
+                counter += 1;
+                numb.textContent = counter + "%";
+            }
+        }, 80);
+    </script>
 </body>
 
 </html>

@@ -190,20 +190,21 @@ function openMainPage() {
     addNewButton.classList.add("clicked");
     habitField.classList.add("opened");
     dailyProgress.classList.add("opened");
-    updateProgressBar(selectedDate);
+    // updateProgressBar(selectedDate);
 }
 
 // get first and last date of a date
-function getFirstLastDateOfWeek(date, firstDayOfWeek = 'mon') {
+function getFirstLastDateOfWeek(date, firstDayOfWeek = "mon") {
     let newDate = new Date(date),
-        wkStart, wkEnd;
+        wkStart,
+        wkEnd;
 
-    if (firstDayOfWeek === 'mon') {
+    if (firstDayOfWeek === "mon") {
         const currentWeekDay = newDate.getDay();
         const lessDays = currentWeekDay === 0 ? 6 : currentWeekDay - 1;
         wkStart = new Date(new Date(newDate).setDate(newDate.getDate() - lessDays));
         wkEnd = new Date(new Date(wkStart).setDate(wkStart.getDate() + 6));
-    } else if (firstDayOfWeek === 'sun') {
+    } else if (firstDayOfWeek === "sun") {
         const first = newDate.getDate() - newDate.getDay();
         const last = first + 6;
         wkStart = new Date(newDate.setDate(first));
@@ -217,26 +218,27 @@ function getFirstLastDateOfWeek(date, firstDayOfWeek = 'mon') {
 
 // get habit result to insert to habit-result class
 function getNumCompletionOfHabitId(habitId, selectedDate) {
-    let recordsOfHabit = retrieveDataFromLocal("habitTracking")["records"][habitId];
+    let recordsOfHabit =
+        retrieveDataFromLocal("habitTracking")["records"][habitId];
     recordsOfHabit = recordsOfHabit ? recordsOfHabit : {};
 
-    let habitSchedule = retrieveDataFromLocal("habitTracking")["habits"][habitId]['schedule'];
+    let habitSchedule =
+        retrieveDataFromLocal("habitTracking")["habits"][habitId]["schedule"];
     numOfTimesPerWeek = habitSchedule.length;
 
-    const completedDates = Object.keys(recordsOfHabit)
-        .filter(key =>
-            (recordsOfHabit[key] === true)
-            && (getFirstLastDateOfWeek(selectedDate)[0] === getFirstLastDateOfWeek(key)[0])
-        );
+    const completedDates = Object.keys(recordsOfHabit).filter(
+        (key) =>
+            recordsOfHabit[key] === true &&
+            getFirstLastDateOfWeek(selectedDate)[0] === getFirstLastDateOfWeek(key)[0]
+    );
     numOfDoneTimesPerWeek = completedDates.length;
 
     return {
-        'numOfDoneTimesPerWeek': numOfDoneTimesPerWeek
-        , 'numOfTimesPerWeek': numOfTimesPerWeek
-        , 'completedDateArr': completedDates
+        numOfDoneTimesPerWeek: numOfDoneTimesPerWeek,
+        numOfTimesPerWeek: numOfTimesPerWeek,
+        completedDateArr: completedDates,
     };
 }
-
 
 // function getHabitResult(habitId, selectedDate) {
 //     /* get all records of the habitID */
@@ -245,7 +247,7 @@ function getNumCompletionOfHabitId(habitId, selectedDate) {
 //     completedDateArr = resultPerWeek['completedDateArr']
 //     numOfTimesPerWeek = resultPerWeek['numOfTimesPerWeek']
 
-//     let habitResult = "", 
+//     let habitResult = "",
 //         firstDateOfWeek = getFirstLastDateOfWeek(selectedDate)
 //         , dateDiff = calTwoStringDates(firstDateOfWeek, selectedDate)
 //         , numDaysStreak = countNumDaysStreak(completedDateArr);
@@ -265,8 +267,6 @@ function getNumCompletionOfHabitId(habitId, selectedDate) {
 //     else if (numOfTimesPerWeek === 0) {
 
 //     }
-
-
 
 //     if (getLenOfObject(completedDates) < 1) {
 //         habitResult = "Complete today to have the first streak";
@@ -296,7 +296,10 @@ function countNumDaysStreak(dateArr) {
     newDateArr = dateArr.sort().reverse();
     let numDaysStreak = 1;
     for (let day = 1; day < newDateArr.length; day++) {
-        if (calTwoStringDates(newDateArr[day], newDateArr[day - 1]) === 86400 * 1000) {
+        if (
+            calTwoStringDates(newDateArr[day], newDateArr[day - 1]) ===
+            86400 * 1000
+        ) {
             numDaysStreak += 1;
         } else {
             break;
@@ -324,7 +327,7 @@ function addEventListenerToCheckbox(element, selectedDate) {
         // const habitResultNewContent = getHabitResult(habitId, selectedDate);
         // habitResult.innerText = habitResultNewContent;
         // update progress bar
-        updateProgressBar(selectedDate);
+        // updateProgressBar(selectedDate);
         // trigger confetti if done habits pct is equal to 100%
         let progressPCT = calDoneHabitsPCT(selectedDate);
         if (progressPCT === 100) {
@@ -352,7 +355,7 @@ function addEventListenerToRemoveButton(element, selectedDate) {
         /* remove the element on html */
         element.remove();
         /* update progress bar */
-        updateProgressBar(selectedDate);
+        // updateProgressBar(selectedDate);
 
         let numActiveHabits = getActiveHabitIds(selectedDate).length;
         displayActiveHabits(numActiveHabits);
@@ -380,13 +383,22 @@ function createNewHabitItemDiv(
     habitName = habitName.length < 1 ? "Your habit" : habitName;
 
     newHabit.innerHTML = `
-            <div class="display-container">
-                <div class='habit-name'>
-                    <h3>${habitName}</h3>
-                    <p class='habit-result'></p>
+                <div class="progress-and-name">
+                    <div class="circle-container">
+                        <div class="circular-progress">
+                            <div class="value-container">0%</div>
+                        </div>
+                    </div>
+                    <div class='habit-name'>
+                        <h3>${habitName}</h3>
+                        <p class='habit-result'></p>
+                    </div>
                 </div>
-                <label class="habit-done" for="checkbox-habit-${habitIndex}"></label>
-                <input class="habit-checkbox" type="checkbox" id="checkbox-habit-${habitIndex} onchange="myfunction()" placeholder="Done" ${checkStatus}>
+                <div class="habit-checkbox">
+                <i class="fa fa-check" aria-hidden="true"></i>
+                <span>+</span>
+                <p>1</p>
+                </div>
             </div>
             <button class="remove-button"><i class="fa fa-minus-circle" aria-hidden="true"></i></button>
     `;
@@ -394,7 +406,18 @@ function createNewHabitItemDiv(
     // habitResult = getHabitResult(habitId, selectedDate);
     // newHabit.querySelector(".habit-result").innerText = habitResult;
     // add click event to checkbox
-    addEventListenerToCheckbox(newHabit, selectedDate);
+
+    // display checkbox if habit is done
+    if (checkIfHabitIsDone(habitId, selectedDate)['isHabitDone']) {
+        displayCheckboxOfDoneHabit(newHabit.querySelector('.habit-checkbox'));
+        // change the progress circle
+        displayProgressCircle(newHabit
+            , checkIfHabitIsDone(habitId, selectedDate)['numOfDoneTimes']
+            /
+            checkIfHabitIsDone(habitId, selectedDate)['numOfTimes']
+            * 100
+        );
+    } else { addEventListenerToCheckbox(newHabit, habitId, selectedDate); }
     // add click event to remove button
     addEventListenerToRemoveButton(newHabit, selectedDate);
     newHabit.addEventListener("click", function () {
@@ -405,8 +428,83 @@ function createNewHabitItemDiv(
     return newHabit;
 }
 
+// check the habit is done
+function checkIfHabitIsDone(habitId, selectedDate) {
+    const goalSetting = allHabits[habitId]["goal"];
+    let recordsOfHabit = [];
+    goalPeriod = goalSetting[1],
+        numOfGoalTimes = goalSetting[0],
+        allRecordsDate = allRecords[habitId];
+    allRecordsDate = getLenOfObject(allRecordsDate) >= 1 ? allRecordsDate : { selectedDate: [] }
+
+    if (goalPeriod === 'day') {
+        recordsOfHabit = allRecords[habitId][selectedDate];
+        recordsOfHabit = recordsOfHabit ? recordsOfHabit : [];
+    } else if (goalPeriod === 'week') {
+        let firstLastDateOfWeek = getFirstLastDateOfWeek(selectedDate);
+        for (let date of Object.keys(allRecordsDate)) {
+            if (date >= firstLastDateOfWeek[0] && date <= firstLastDateOfWeek[1]) {
+                recordsOfHabit = recordsOfHabit.concat(allRecordsDate[selectedDate]);
+            }
+        }
+    } else if (goalPeriod === 'month') {
+        for (let date of Object.keys(allRecordsDate)) {
+            if (((new Date(selectedDate)).getMonth() === (new Date(date)).getMonth())
+                && ((new Date(selectedDate)).getFullYear() === (new Date(date)).getFullYear())
+            ) {
+                recordsOfHabit = recordsOfHabit.concat(allRecordsDate[selectedDate]);
+            }
+        }
+    }
+    return {
+        'numOfTimes': numOfGoalTimes,
+        'numOfDoneTimes': recordsOfHabit.length,
+        'goalPeriod': goalPeriod,
+        'isHabitDone': recordsOfHabit.length >= numOfGoalTimes
+    };
+}
+
+// habit checkbox when clicking
+function addEventListenerToCheckbox(habitElement, habitId, selectedDate) {
+    let habitCheckbox = habitElement.querySelector(".habit-checkbox"),
+        recordsOfHabit = allRecords[habitId][selectedDate];
+    recordsOfHabit = recordsOfHabit ? recordsOfHabit : [];
+
+    habitCheckbox.addEventListener("click", function () {
+        recordsOfHabit.push(getUnixTimeToday());
+        allRecords[habitId][selectedDate] = recordsOfHabit;
+        storeToLocalStorage(habitTracking, "habitTracking");
+        if (!checkIfHabitIsDone(habitId, selectedDate)['isHabitDone']) {
+            // change color when click to checkbox
+            habitCheckbox.classList.add("clicked");
+            // back to normal state after 0.5s
+            let delayInMilliseconds = 500;
+            setTimeout(function () {
+                habitCheckbox.classList.remove("clicked");
+            }, delayInMilliseconds);
+        }
+        else {
+            displayCheckboxOfDoneHabit(habitCheckbox);
+        }
+        // change the progress circle
+        displayProgressCircle(habitElement
+            , checkIfHabitIsDone(habitId, selectedDate)['numOfDoneTimes']
+            /
+            checkIfHabitIsDone(habitId, selectedDate)['numOfTimes']
+            * 100
+            , true
+        );
+    });
+}
+
+// display checkbox of done habits
+function displayCheckboxOfDoneHabit(habitCheckboxElement) {
+    habitCheckboxElement.classList.add("done");
+    habitCheckboxElement.innerText = 'Done';
+};
+
 // add new habit to localStorage
-function addNewHabit(habitId, habitName, startDate, schedule) {
+function addNewHabit(habitId, habitName, startDate, schedule, goal) {
     habitName = habitName.length === 0 ? "Your habit" : habitName;
     createdTime = getUnixTimeToday();
     allHabits[habitId] = {
@@ -415,6 +513,7 @@ function addNewHabit(habitId, habitName, startDate, schedule) {
         name: habitName,
         deletedAt: null,
         schedule: schedule,
+        goal: goal,
     };
 }
 
@@ -424,9 +523,9 @@ function updateHabit(habitId, property, propertyValue) {
 }
 
 // update properties of records to localStorage
-function updateRecord(habitId, status, updateDate) {
+function updateRecord(habitId, checkingResult, updateDate) {
     if (!allRecords[habitId]) {
         allRecords[habitId] = {};
     }
-    allRecords[habitId][updateDate] = status;
+    allRecords[habitId][updateDate] = checkingResult;
 }

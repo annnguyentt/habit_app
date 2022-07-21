@@ -1,7 +1,8 @@
 // display number of items of selected date
 function displayItemsOfSelectedDate(selectedDate) {
-    let habitField = document.querySelector(".habit-field");
-    numActiveHabits = getActiveHabitIds(selectedDate).length;
+    let habitField = document.querySelector(".habit-field"),
+        numActiveHabits = getActiveHabitIds(selectedDate).length;
+
     displayActiveHabits(numActiveHabits);
     document.querySelectorAll(".habit-display").forEach((e) => e.remove());
     if (numActiveHabits >= 1) {
@@ -13,7 +14,7 @@ function displayItemsOfSelectedDate(selectedDate) {
         for (let habitId of allActiveHabitIds) {
             let habitStatus = allRecords[habitId][selectedDate]
                 ? allRecords[habitId][selectedDate]
-                : false;
+                : [];
             const newHabit = createNewHabitItemDiv(
                 habitId,
                 allHabits[habitId]["name"],
@@ -25,6 +26,14 @@ function displayItemsOfSelectedDate(selectedDate) {
             idx += 1;
         }
     }
+}
+
+// return goal of habit
+function getGoalOfHabit() {
+    let goalSection = document.querySelector(".goal");
+    numOfTimes = parseInt(goalSection.querySelector("#num-of-times").value);
+    goalPeriod = goalSection.querySelector("#goal-period").value;
+    return [numOfTimes, goalPeriod];
 }
 
 // return selected day names in the schedule section
@@ -58,9 +67,9 @@ function replaceContentSelectedItems() {
 
 // whether user returns to the main screen or not
 function returnToMainScreen(isReturned = true) {
-    const addNewHabitField = document.querySelector(".add-new-habit-field")
-        , body = document.querySelector("body")
-        , scheduleOption = document.querySelector(".schedule-option");
+    const addNewHabitField = document.querySelector(".add-new-habit-field"),
+        body = document.querySelector("body"),
+        scheduleOption = document.querySelector(".schedule-option");
     if (isReturned) {
         addNewHabitField.classList.remove("opened");
         body.classList.remove("stop-scrolling");
@@ -119,19 +128,19 @@ const allRecords = habitTracking["records"];
 displayItemsOfSelectedDate(selectedDate);
 
 /* CLOSE REMOVE BUTTON IF USERS CLICK ESLEWHERE NOT HABIT ITEMS */
-document.addEventListener("click", function (event) {
-    if (
-        event.target.classList.contains("habit-display") ||
-        event.target.parentNode.classList.contains("habit-display") ||
-        event.target.parentNode.parentNode.classList.contains("habit-display") ||
-        event.target.parentNode.parentNode.parentNode.classList.contains(
-            "habit-display"
-        )
-    ) {
-    } else {
-        closeAllRemoveButtons();
-    }
-});
+// document.addEventListener("click", function (event) {
+//     if (
+//         event.target.classList.contains("habit-display") ||
+//         event.target.parentNode.classList.contains("habit-display") ||
+//         event.target.parentNode.parentNode.classList.contains("habit-display") ||
+//         event.target.parentNode.parentNode.parentNode.classList.contains(
+//             "habit-display"
+//         )
+//     ) {
+//     } else {
+//         closeAllRemoveButtons();
+//     }
+// });
 
 /* CLICK ADD NEW HABIT BUTTON */
 const addNewHabitButton = document.querySelector("#add-new-habit-button");
@@ -153,7 +162,7 @@ addNewHabitButton.addEventListener("click", function () {
     // defaultly show num of times in the goal section
     document.querySelector("#num-of-times").value = 1;
     // defaultly show goal period is week
-    document.querySelector('#goal-period').value = "day";
+    document.querySelector("#goal-period").value = "day";
 });
 
 /* CLICK CANCEL BUTTON */
@@ -191,8 +200,8 @@ saveButton.addEventListener("click", function () {
     const selectedDayName = getSelectedDayName();
 
     // add the new habit to local storage first
-    addNewHabit(habitId, habitName, startDate, selectedDayName);
-    updateRecord(habitId, false, startDate);
+    addNewHabit(habitId, habitName, startDate, selectedDayName, getGoalOfHabit());
+    updateRecord(habitId, [], startDate);
     storeToLocalStorage(habitTracking, "habitTracking");
 
     // clear the input value after saving
@@ -202,3 +211,38 @@ saveButton.addEventListener("click", function () {
     // display
     displayItemsOfSelectedDate(selectedDate);
 });
+
+
+
+function displayProgressCircle(habitElement, progressEndValue, isRunning=false) {
+    progressEndValue = progressEndValue <= 100 ? progressEndValue : 100
+    let progressBar = habitElement.querySelector(".circular-progress");
+    let valueContainer = habitElement.querySelector(".value-container");
+    let progressValue = 0;
+    let speed = 0.2;
+
+    if (isRunning) {
+        let singleProgress = setInterval(() => {
+            progressValue++;
+            valueContainer.textContent = `${progressValue}%`;
+            progressBar.style.background = `
+                conic-gradient(
+                    #FC5DBE ${progressValue * 3.6}deg,
+                    #E3EEF2 ${progressValue * 3.6}deg
+                )
+            `;
+            if (progressValue >= progressEndValue) {
+                clearInterval(singleProgress);
+            }
+        }, speed);
+    }
+    else {
+        valueContainer.textContent = `${progressEndValue}%`;
+            progressBar.style.background = `
+                conic-gradient(
+                    #FC5DBE ${progressEndValue * 3.6}deg,
+                    #E3EEF2 ${progressEndValue * 3.6}deg
+                )
+                `
+    }
+}
