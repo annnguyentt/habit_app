@@ -408,12 +408,15 @@ div .dot {
 }
 
 .habit-field.opened {
-    margin: 0;
-    padding: 20px;
+    padding: 10px 20px 20px 20px;
     padding-bottom: 85px;
     overflow-y: auto;
     position: relative;
     display: block;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    background-color: white;
+    margin-top: -15px;
 }
 
 .habit-items {
@@ -441,10 +444,10 @@ div .dot {
     display: flex;
     transition: all 0.25s ease-in-out;
     margin: 0;
-    padding: 0 15px;
     width: 100%;
     justify-content: space-between;
     align-items: center;
+    border-bottom: solid 1px #F2F2F2;
 }
 
 .habit-display:hover {
@@ -483,7 +486,7 @@ div .dot {
 
 .habit-name {
     display: inline-block;
-    margin: 0 5px;
+    margin: 0 10px;
     overflow-x: auto;
 }
 
@@ -520,7 +523,7 @@ div .dot {
     border: solid 2px #FADBAE;
     width: 49px;
     height: 40px;
-    margin: 15px;
+    margin: 10px;
     cursor: pointer;
     transition: all 0.5s ease-in-out;
 }
@@ -531,10 +534,10 @@ div .dot {
 }
 
 .habit-checkbox.done {
-    cursor: auto;
-    background-color: #8152FF;
-    color: white;
-    border: solid 1px rgb(76 39 165);
+    cursor: none;
+    color: #F4BB0C;
+    background-color: transparent;
+    border: none;
 }
 
 footer {
@@ -772,6 +775,7 @@ footer {
 .progress-and-name {
     display: flex;
     align-items: center;
+    margin-left: 10px;
 }
 
 .circle-container {
@@ -791,26 +795,37 @@ footer {
     box-shadow: 20px 20px 40px rgba(60, 60, 150, 0.25);
     display: grid;
     place-items: center;
-  }
-  .circular-progress {
+}
+
+.circular-progress {
     position: relative;
     aspect-ratio: 1/1;
-    width: 43px;
+    width: 35px;
     border-radius: 50%;
     display: grid;
     place-items: center;
-  }
-  .circular-progress:before {
+}
+
+.circular-progress.done::before {
+    content: '\2713';
+    background-color: transparent;
+    color: white;
+    text-align: center;
+    font-size: 28px;
+}
+
+.circular-progress::before {
     content: "";
     position: absolute;
     aspect-ratio: 1/1;
     width: 67%;
     background-color: #ffffff;
     border-radius: 50%;
-}   
-  .value-container {
+    transition: all 1s;
+}
+
+.value-container {
     position: relative;
     color: #231c3db5;
     font-size: 12px;
-  }
-    
+}

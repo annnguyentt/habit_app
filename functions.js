@@ -14,6 +14,19 @@ function retrieveDataFromLocal(dataName) {
     return storedData;
 }
 
+// update properties of habits to localStorage
+function updateHabit(habitId, property, propertyValue) {
+    allHabits[habitId][property] = propertyValue;
+}
+
+// update properties of records to localStorage
+function updateRecord(habitId, checkingResult, updateDate) {
+    if (!allRecords[habitId]) {
+        allRecords[habitId] = {};
+    }
+    allRecords[habitId][updateDate] = checkingResult;
+}
+
 // insert a new node before a centain node
 function insertBeforeANode(referenceNode, newNode) {
     referenceNode.parentNode.insertBefore(newNode, referenceNode);
@@ -82,34 +95,6 @@ function calDoneHabitsPCT(selectedDate) {
     return progressPCT;
 }
 
-// update progress bar
-function updateProgressBar(selectedDate) {
-    let progressPCT = calDoneHabitsPCT(selectedDate),
-        habitProgress = document.querySelector("#all-habits-progress"),
-        progressTitle = document.querySelector(".daily-progress-title"),
-        quote = progressTitle.querySelector("#quote"),
-        percentage = progressTitle.querySelector("#percentage");
-
-    if (isNaN(progressPCT)) {
-        progressPCT = 0;
-    }
-    habitProgress.value = progressPCT;
-    percentage.innerHTML = `${progressPCT}%`;
-    habitProgress.classList.remove("completed");
-    if (progressPCT === 0) {
-        quote.innerText = "Let's start a new day to shine!";
-    } else if (progressPCT < 50) {
-        quote.innerText = "You're almost halfway, keep it up!";
-    } else if (progressPCT === 50) {
-        quote.innerText = "You're close to being finished, hold on!";
-    } else if (progressPCT < 100) {
-        quote.innerText = "Your're almost done, go ahead!";
-    } else if (progressPCT === 100) {
-        quote.innerText = "All habits are completed. Stay ahead!";
-        habitProgress.classList.add("completed");
-    }
-}
-
 // sort an array
 function sortArray(arr) {
     return arr.sort((a, b) => a - b);
@@ -142,25 +127,6 @@ function getDateArr(dayInterval, startDate) {
     return dateArr;
 }
 
-// get name of the month
-const getMonthName = (month) => {
-    const monthNames = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-    ];
-    return monthNames[parseInt(month) - 1];
-};
-
 // get name of the day
 const getDayName = (weekDay) => {
     const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -185,12 +151,9 @@ function formatDate(unixTime, toDisplay = true) {
 // open main page
 function openMainPage() {
     let addNewButton = document.querySelector(".add-new-habit"),
-        habitField = document.querySelector(".habit-field"),
-        dailyProgress = document.querySelector(".daily-progress");
+        habitField = document.querySelector(".habit-field");
     addNewButton.classList.add("clicked");
     habitField.classList.add("opened");
-    dailyProgress.classList.add("opened");
-    // updateProgressBar(selectedDate);
 }
 
 // get first and last date of a date
@@ -216,75 +179,70 @@ function getFirstLastDateOfWeek(date, firstDayOfWeek = "mon") {
     return [wkStart, wkEnd];
 }
 
-// get habit result to insert to habit-result class
-function getNumCompletionOfHabitId(habitId, selectedDate) {
-    let recordsOfHabit =
-        retrieveDataFromLocal("habitTracking")["records"][habitId];
-    recordsOfHabit = recordsOfHabit ? recordsOfHabit : {};
-
-    let habitSchedule =
-        retrieveDataFromLocal("habitTracking")["habits"][habitId]["schedule"];
-    numOfTimesPerWeek = habitSchedule.length;
-
-    const completedDates = Object.keys(recordsOfHabit).filter(
-        (key) =>
-            recordsOfHabit[key] === true &&
-            getFirstLastDateOfWeek(selectedDate)[0] === getFirstLastDateOfWeek(key)[0]
-    );
-    numOfDoneTimesPerWeek = completedDates.length;
-
-    return {
-        numOfDoneTimesPerWeek: numOfDoneTimesPerWeek,
-        numOfTimesPerWeek: numOfTimesPerWeek,
-        completedDateArr: completedDates,
+// circular progress bar
+function displayCircularProgress(
+    habitElement,
+    progressStartValue = 0,
+    progressEndValue,
+    isRunning = false
+) {
+    let progressBar = habitElement.querySelector(".circular-progress");
+    let fillProgress = (progressValue) => {
+        progressBar.style.background = `
+                conic-gradient(
+                    rgba(65, 173, 133, 1) ${progressValue * 3.6}deg,
+                    rgba(65, 173, 133, 0.3) ${progressValue * 3.6}deg
+                )
+            `;
+        if (progressValue === 100) {
+            progressBar.classList.add('done');
+        }
     };
+
+    progressEndValue = progressEndValue <= 100 ? progressEndValue : 100;
+    let speed = 0.5;
+    if (isRunning) {
+        let singleProgress = setInterval(() => {
+            progressStartValue++;
+            if (progressStartValue >= progressEndValue) {
+                clearInterval(singleProgress);
+            }
+            fillProgress(progressStartValue);
+        }, speed);
+    } else {
+        fillProgress(progressEndValue);
+    }
 }
 
-// function getHabitResult(habitId, selectedDate) {
-//     /* get all records of the habitID */
-//     const resultPerWeek = getNumCompletionOfHabitId(habitId, selectedDate);
-//     numOfDoneTimesPerWeek = resultPerWeek['numOfDoneTimesPerWeek']
-//     completedDateArr = resultPerWeek['completedDateArr']
-//     numOfTimesPerWeek = resultPerWeek['numOfTimesPerWeek']
-
-//     let habitResult = "",
-//         firstDateOfWeek = getFirstLastDateOfWeek(selectedDate)
-//         , dateDiff = calTwoStringDates(firstDateOfWeek, selectedDate)
-//         , numDaysStreak = countNumDaysStreak(completedDateArr);
-
-//     if (numOfTimesPerWeek === 7) {
-//         if (numOfDoneTimesPerWeek === 0) {
-//             habitResult = "Complete today to have the first streak";
-//             return habitResult
-//         } else if ((dateDiff >= numDaysStreak) && (dateDiff <= numDaysStreak + 1)) {
-//             habitResult = `${numDaysStreak}-day${numDaysStreak > 1 ? "s" : ""} streak`;
-//             return habitResult
-//         } else {
-//             habitResult = `Finished ${numOfDoneTimesPerWeek}/${numOfTimesPerWeek} times per week`;
-//             return habitResult
-//         }
-//     }
-//     else if (numOfTimesPerWeek === 0) {
-
-//     }
-
-//     if (getLenOfObject(completedDates) < 1) {
-//         habitResult = "Complete today to have the first streak";
-//     } else if (
-//         calTwoStringDates(completedDates[0], selectedDate) <=
-//         86400 * 1000
-//     ) {
-//         const numDaysStreak = countNumDaysStreak(completedDates);
-//         habitResult = `${numDaysStreak}-day${numDaysStreak > 1 ? "s" : ""} streak`;
-//     } else {
-//         const dateDiff = Math.floor(
-//             calTwoStringDates(completedDates[0], selectedDate) / (86400 * 1000)
-//         );
-//         habitResult = `Completed ${dateDiff} day${dateDiff > 1 ? "s" : ""
-//             } ago. Let get it done!!`;
-//     }
-//     return habitResult;
-// }
+function getHabitResult(habitId, selectedDate) {
+    const cheerfulWords = ["go ahead", "hold on"];
+    if (
+        allHabits[habitId]["goal"][1] === "day" &&
+        allHabits[habitId]["schedule"].length === 7
+    ) {
+        let doneDateArr = Object.keys(allRecords[habitId])
+            .filter(
+                (date) => checkIfHabitIsDone(habitId, date)["isHabitDone"] === true
+            )
+            .sort()
+            .reverse();
+        if (calTwoStringDates(doneDateArr[0], selectedDate) <= 86400 * 1000) {
+            let numDaysStreak = countNumDaysStreak(doneDateArr);
+            if (numDaysStreak >= 1) {
+                return `${numDaysStreak}-day${numDaysStreak > 1 ? "s" : ""} streak`;
+            }
+        }
+    }
+    let habitProgress = checkIfHabitIsDone(habitId, selectedDate);
+    if (habitProgress["isHabitDone"]) {
+        return `Finished all ${habitProgress["numOfTimes"]} times per ${habitProgress["goalPeriod"]
+            }, ${cheerfulWords[Math.floor(Math.random() * cheerfulWords.length)]} !`;
+    } else {
+        return `Finished ${habitProgress["numOfDoneTimes"]}/${habitProgress["numOfTimes"]
+            } times per ${habitProgress["goalPeriod"]}, ${cheerfulWords[Math.floor(Math.random() * cheerfulWords.length)]
+            } !`;
+    }
+}
 
 // calculate the difference in millisecond between 2 dates
 function calTwoStringDates(startDate, endDate) {
@@ -308,38 +266,6 @@ function countNumDaysStreak(dateArr) {
     return numDaysStreak;
 }
 
-// add event listener to checkbox and update results to local storage
-const audio = new Audio("sound_effect/8SUM472-click-casual-digital.mp3");
-function addEventListenerToCheckbox(element, selectedDate) {
-    const habitCheckbox = element.querySelector(".habit-checkbox");
-    habitCheckbox.addEventListener("click", function () {
-        // insert data of the new habit to local storage
-        const ishabitDone = habitCheckbox.checked;
-        const habitId = element.getAttribute("data-habit-id");
-        updateRecord(habitId, ishabitDone, selectedDate);
-        storeToLocalStorage(habitTracking, "habitTracking");
-        // audio play when the checkbox is checked
-        if (ishabitDone) {
-            audio.play();
-        }
-        // update the habit result
-        const habitResult = habitCheckbox.parentNode.querySelector(".habit-result");
-        // const habitResultNewContent = getHabitResult(habitId, selectedDate);
-        // habitResult.innerText = habitResultNewContent;
-        // update progress bar
-        // updateProgressBar(selectedDate);
-        // trigger confetti if done habits pct is equal to 100%
-        let progressPCT = calDoneHabitsPCT(selectedDate);
-        if (progressPCT === 100) {
-            confetti({
-                angle: 140,
-                spread: 55,
-                origin: { x: 0.95, y: 0.4 },
-            });
-        }
-    });
-}
-
 // add event listener to remove button, and get the habit out of the list if clicking
 function addEventListenerToRemoveButton(element, selectedDate) {
     const removeButton = element.querySelector(".remove-button"),
@@ -354,9 +280,7 @@ function addEventListenerToRemoveButton(element, selectedDate) {
         storeToLocalStorage(habitTracking, "habitTracking");
         /* remove the element on html */
         element.remove();
-        /* update progress bar */
-        // updateProgressBar(selectedDate);
-
+        /* update number of active habits */
         let numActiveHabits = getActiveHabitIds(selectedDate).length;
         displayActiveHabits(numActiveHabits);
     });
@@ -369,24 +293,17 @@ function closeAllRemoveButtons() {
 }
 
 // create a habit item div
-function createNewHabitItemDiv(
-    habitId,
-    habitName,
-    isDone,
-    habitIndex,
-    selectedDate
-) {
+function createNewHabitItemDiv(habitId, habitName, selectedDate) {
     let newHabit = document.createElement("div");
     newHabit.classList.add("habit-display");
     newHabit.setAttribute("data-habit-id", habitId);
-    let checkStatus = isDone ? "checked" : "";
     habitName = habitName.length < 1 ? "Your habit" : habitName;
 
     newHabit.innerHTML = `
                 <div class="progress-and-name">
                     <div class="circle-container">
                         <div class="circular-progress">
-                            <div class="value-container">0%</div>
+                            <div class="value-container"></div>
                         </div>
                     </div>
                     <div class='habit-name'>
@@ -403,21 +320,18 @@ function createNewHabitItemDiv(
             <button class="remove-button"><i class="fa fa-minus-circle" aria-hidden="true"></i></button>
     `;
     // update habit result after changing checkbox click
-    // habitResult = getHabitResult(habitId, selectedDate);
-    // newHabit.querySelector(".habit-result").innerText = habitResult;
-    // add click event to checkbox
-
-    // display checkbox if habit is done
-    if (checkIfHabitIsDone(habitId, selectedDate)['isHabitDone']) {
-        displayCheckboxOfDoneHabit(newHabit.querySelector('.habit-checkbox'));
-        // change the progress circle
-        displayProgressCircle(newHabit
-            , checkIfHabitIsDone(habitId, selectedDate)['numOfDoneTimes']
-            /
-            checkIfHabitIsDone(habitId, selectedDate)['numOfTimes']
-            * 100
-        );
-    } else { addEventListenerToCheckbox(newHabit, habitId, selectedDate); }
+    habitResult = getHabitResult(habitId, selectedDate);
+    newHabit.querySelector(".habit-result").innerText = habitResult;
+    // fixed dislay of circular progress
+    displayCircularProgress(
+        newHabit,
+        0,
+        (checkIfHabitIsDone(habitId, selectedDate)["numOfDoneTimes"] /
+            checkIfHabitIsDone(habitId, selectedDate)["numOfTimes"]) *
+        100
+    );
+    // add eventlistener to checkbox
+    addEventListenerToCheckbox(newHabit, habitId, selectedDate);
     // add click event to remove button
     addEventListenerToRemoveButton(newHabit, selectedDate);
     newHabit.addEventListener("click", function () {
@@ -432,35 +346,37 @@ function createNewHabitItemDiv(
 function checkIfHabitIsDone(habitId, selectedDate) {
     const goalSetting = allHabits[habitId]["goal"];
     let recordsOfHabit = [];
-    goalPeriod = goalSetting[1],
-        numOfGoalTimes = goalSetting[0],
-        allRecordsDate = allRecords[habitId];
-    allRecordsDate = getLenOfObject(allRecordsDate) >= 1 ? allRecordsDate : { selectedDate: [] }
+    (goalPeriod = goalSetting[1]),
+        (numOfGoalTimes = goalSetting[0]),
+        (allRecordsDate = allRecords[habitId]);
+    allRecordsDate =
+        getLenOfObject(allRecordsDate) >= 1 ? allRecordsDate : { selectedDate: [] };
 
-    if (goalPeriod === 'day') {
+    if (goalPeriod === "day") {
         recordsOfHabit = allRecords[habitId][selectedDate];
         recordsOfHabit = recordsOfHabit ? recordsOfHabit : [];
-    } else if (goalPeriod === 'week') {
+    } else if (goalPeriod === "week") {
         let firstLastDateOfWeek = getFirstLastDateOfWeek(selectedDate);
         for (let date of Object.keys(allRecordsDate)) {
             if (date >= firstLastDateOfWeek[0] && date <= firstLastDateOfWeek[1]) {
                 recordsOfHabit = recordsOfHabit.concat(allRecordsDate[selectedDate]);
             }
         }
-    } else if (goalPeriod === 'month') {
+    } else if (goalPeriod === "month") {
         for (let date of Object.keys(allRecordsDate)) {
-            if (((new Date(selectedDate)).getMonth() === (new Date(date)).getMonth())
-                && ((new Date(selectedDate)).getFullYear() === (new Date(date)).getFullYear())
+            if (
+                new Date(selectedDate).getMonth() === new Date(date).getMonth() &&
+                new Date(selectedDate).getFullYear() === new Date(date).getFullYear()
             ) {
                 recordsOfHabit = recordsOfHabit.concat(allRecordsDate[selectedDate]);
             }
         }
     }
     return {
-        'numOfTimes': numOfGoalTimes,
-        'numOfDoneTimes': recordsOfHabit.length,
-        'goalPeriod': goalPeriod,
-        'isHabitDone': recordsOfHabit.length >= numOfGoalTimes
+        numOfTimes: numOfGoalTimes,
+        numOfDoneTimes: recordsOfHabit.length,
+        goalPeriod: goalPeriod,
+        isHabitDone: recordsOfHabit.length >= numOfGoalTimes,
     };
 }
 
@@ -471,10 +387,14 @@ function addEventListenerToCheckbox(habitElement, habitId, selectedDate) {
     recordsOfHabit = recordsOfHabit ? recordsOfHabit : [];
 
     habitCheckbox.addEventListener("click", function () {
+        const oldValueOfProgress =
+            (checkIfHabitIsDone(habitId, selectedDate)["numOfDoneTimes"] /
+                checkIfHabitIsDone(habitId, selectedDate)["numOfTimes"]) *
+            100;
         recordsOfHabit.push(getUnixTimeToday());
         allRecords[habitId][selectedDate] = recordsOfHabit;
         storeToLocalStorage(habitTracking, "habitTracking");
-        if (!checkIfHabitIsDone(habitId, selectedDate)['isHabitDone']) {
+        if (!checkIfHabitIsDone(habitId, selectedDate)["isHabitDone"]) {
             // change color when click to checkbox
             habitCheckbox.classList.add("clicked");
             // back to normal state after 0.5s
@@ -482,26 +402,29 @@ function addEventListenerToCheckbox(habitElement, habitId, selectedDate) {
             setTimeout(function () {
                 habitCheckbox.classList.remove("clicked");
             }, delayInMilliseconds);
-        }
-        else {
+        } else {
             displayCheckboxOfDoneHabit(habitCheckbox);
         }
         // change the progress circle
-        displayProgressCircle(habitElement
-            , checkIfHabitIsDone(habitId, selectedDate)['numOfDoneTimes']
-            /
-            checkIfHabitIsDone(habitId, selectedDate)['numOfTimes']
-            * 100
-            , true
+        displayCircularProgress(
+            habitElement,
+            oldValueOfProgress,
+            (checkIfHabitIsDone(habitId, selectedDate)["numOfDoneTimes"] /
+                checkIfHabitIsDone(habitId, selectedDate)["numOfTimes"]) *
+            100,
+            true
         );
+        // update the habit result
+        const habitResult = habitCheckbox.parentNode.querySelector(".habit-result");
+        habitResult.innerText = getHabitResult(habitId, selectedDate);
     });
 }
 
 // display checkbox of done habits
 function displayCheckboxOfDoneHabit(habitCheckboxElement) {
     habitCheckboxElement.classList.add("done");
-    habitCheckboxElement.innerText = 'Done';
-};
+    habitCheckboxElement.innerText = "";
+}
 
 // add new habit to localStorage
 function addNewHabit(habitId, habitName, startDate, schedule, goal) {
@@ -515,17 +438,4 @@ function addNewHabit(habitId, habitName, startDate, schedule, goal) {
         schedule: schedule,
         goal: goal,
     };
-}
-
-// update properties of habits to localStorage
-function updateHabit(habitId, property, propertyValue) {
-    allHabits[habitId][property] = propertyValue;
-}
-
-// update properties of records to localStorage
-function updateRecord(habitId, checkingResult, updateDate) {
-    if (!allRecords[habitId]) {
-        allRecords[habitId] = {};
-    }
-    allRecords[habitId][updateDate] = checkingResult;
 }

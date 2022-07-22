@@ -12,14 +12,9 @@ function displayItemsOfSelectedDate(selectedDate) {
             getActiveHabitIds(selectedDate)
         );
         for (let habitId of allActiveHabitIds) {
-            let habitStatus = allRecords[habitId][selectedDate]
-                ? allRecords[habitId][selectedDate]
-                : [];
             const newHabit = createNewHabitItemDiv(
                 habitId,
                 allHabits[habitId]["name"],
-                habitStatus,
-                idx,
                 selectedDate
             );
             habitField.appendChild(newHabit);
@@ -127,21 +122,6 @@ const allRecords = habitTracking["records"];
 
 displayItemsOfSelectedDate(selectedDate);
 
-/* CLOSE REMOVE BUTTON IF USERS CLICK ESLEWHERE NOT HABIT ITEMS */
-// document.addEventListener("click", function (event) {
-//     if (
-//         event.target.classList.contains("habit-display") ||
-//         event.target.parentNode.classList.contains("habit-display") ||
-//         event.target.parentNode.parentNode.classList.contains("habit-display") ||
-//         event.target.parentNode.parentNode.parentNode.classList.contains(
-//             "habit-display"
-//         )
-//     ) {
-//     } else {
-//         closeAllRemoveButtons();
-//     }
-// });
-
 /* CLICK ADD NEW HABIT BUTTON */
 const addNewHabitButton = document.querySelector("#add-new-habit-button");
 const addNewHabitField = document.querySelector(".add-new-habit-field");
@@ -212,37 +192,3 @@ saveButton.addEventListener("click", function () {
     displayItemsOfSelectedDate(selectedDate);
 });
 
-
-
-function displayProgressCircle(habitElement, progressEndValue, isRunning=false) {
-    progressEndValue = progressEndValue <= 100 ? progressEndValue : 100
-    let progressBar = habitElement.querySelector(".circular-progress");
-    let valueContainer = habitElement.querySelector(".value-container");
-    let progressValue = 0;
-    let speed = 0.2;
-
-    if (isRunning) {
-        let singleProgress = setInterval(() => {
-            progressValue++;
-            valueContainer.textContent = `${progressValue}%`;
-            progressBar.style.background = `
-                conic-gradient(
-                    #FC5DBE ${progressValue * 3.6}deg,
-                    #E3EEF2 ${progressValue * 3.6}deg
-                )
-            `;
-            if (progressValue >= progressEndValue) {
-                clearInterval(singleProgress);
-            }
-        }, speed);
-    }
-    else {
-        valueContainer.textContent = `${progressEndValue}%`;
-            progressBar.style.background = `
-                conic-gradient(
-                    #FC5DBE ${progressEndValue * 3.6}deg,
-                    #E3EEF2 ${progressEndValue * 3.6}deg
-                )
-                `
-    }
-}
