@@ -138,11 +138,13 @@ div .dot {
 }
 
 .showable-dates {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    padding: 15px 5px 30px 5px;
+    display: flex;
+    /* grid-template-columns: repeat(7, 1fr); */
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 10px 30px 10px;
     background-color: #8152ff0d;
-    margin: 0;
+    margin: 0 auto;
 }
 
 .date {
@@ -153,7 +155,7 @@ div .dot {
     border: solid 1px #e0e4f7;
     border-radius: 10px;
     aspect-ratio: 1/1;
-    max-width: 80px;
+    width: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -565,6 +567,7 @@ footer {
 }
 
 #add-new-habit-button {
+    text-align: center;
     height: 75%;
     aspect-ratio: 1/1;
     border-radius: 50%;
@@ -657,7 +660,6 @@ footer {
     align-items: center;
     margin: 0;
     margin-right: 10px;
-    padding: 20px;
     border-radius: 10px;
     color: #F7FAFA;
     height: 56px;
