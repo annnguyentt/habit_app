@@ -222,6 +222,11 @@ div .dot {
     font-style: italic;
 }
 
+.add-new-habit > img {
+    transform: rotate(90deg);
+    width: 150px;
+}
+
 .daily-progress {
     display: none;
 }
@@ -448,6 +453,7 @@ div .dot {
     justify-content: space-between;
     align-items: center;
     border-bottom: solid 1px #F2F2F2;
+    padding: 10px;
 }
 
 .habit-display:hover {
@@ -519,11 +525,10 @@ div .dot {
     align-items: center;
     justify-content: center;
     border-radius: 10px;
-    background: #FFE187;
-    border: solid 2px #FADBAE;
+    background: linear-gradient(304deg, rgba(252,93,190,1) 0%, rgba(247,137,63,1) 100%);
+    color: white;
     width: 49px;
     height: 40px;
-    margin: 10px;
     cursor: pointer;
     transition: all 0.5s ease-in-out;
 }
@@ -534,10 +539,7 @@ div .dot {
 }
 
 .habit-checkbox.done {
-    cursor: none;
-    color: #F4BB0C;
-    background-color: transparent;
-    border: none;
+    display: none;
 }
 
 footer {
@@ -775,7 +777,7 @@ footer {
 .progress-and-name {
     display: flex;
     align-items: center;
-    margin-left: 10px;
+    width: 100%;
 }
 
 .circle-container {
