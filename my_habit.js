@@ -130,6 +130,9 @@ const habitNameInput = document.querySelector("#habit-name");
 addNewHabitButton.addEventListener("click", function () {
     // focus to the input field first
     habitNameInput.focus();
+    setTimeout(() => {
+        window.scrollTo(0, 0);
+    }, 0.35*1000);
     // remove main screen
     returnToMainScreen(false);
     // default status of all checkboxes is true
