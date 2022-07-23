@@ -567,7 +567,9 @@ footer {
 }
 
 #add-new-habit-button {
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 75%;
     aspect-ratio: 1/1;
     border-radius: 50%;
