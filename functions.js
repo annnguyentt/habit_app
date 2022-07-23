@@ -195,7 +195,7 @@ function displayCircularProgress(
                 )
             `;
         if (progressValue === 100) {
-            progressBar.classList.add('done');
+            progressBar.classList.add("done");
         }
     };
 
@@ -235,8 +235,7 @@ function getHabitResult(habitId, selectedDate) {
     }
     let habitProgress = checkIfHabitIsDone(habitId, selectedDate);
     if (habitProgress["isHabitDone"]) {
-        return `Finished all ${habitProgress["numOfTimes"]} times per ${habitProgress["goalPeriod"]
-            }, ${cheerfulWords[Math.floor(Math.random() * cheerfulWords.length)]} !`;
+        return `Finished all ${habitProgress["numOfTimes"]} times per ${habitProgress["goalPeriod"]}`;
     } else {
         return `Finished ${habitProgress["numOfDoneTimes"]}/${habitProgress["numOfTimes"]
             } times per ${habitProgress["goalPeriod"]}, ${cheerfulWords[Math.floor(Math.random() * cheerfulWords.length)]
@@ -322,14 +321,15 @@ function createNewHabitItemDiv(habitId, habitName, selectedDate) {
     // update habit result after changing checkbox click
     habitResult = getHabitResult(habitId, selectedDate);
     newHabit.querySelector(".habit-result").innerText = habitResult;
-    // fixed dislay of circular progress
-    displayCircularProgress(
-        newHabit,
-        0,
+    // get progress percentage
+    let progressPCT =
         (checkIfHabitIsDone(habitId, selectedDate)["numOfDoneTimes"] /
             checkIfHabitIsDone(habitId, selectedDate)["numOfTimes"]) *
-        100
-    );
+        100;
+    // fixed dislay of circular progress
+    displayCircularProgress(newHabit, 0, progressPCT);
+    // remove checkbox when habit is completed
+    if (progressPCT >= 100) { displayCheckboxOfDoneHabit(newHabit.querySelector('.habit-checkbox')); }
     // add eventlistener to checkbox
     addEventListenerToCheckbox(newHabit, habitId, selectedDate);
     // add click event to remove button
@@ -359,7 +359,7 @@ function checkIfHabitIsDone(habitId, selectedDate) {
         let firstLastDateOfWeek = getFirstLastDateOfWeek(selectedDate);
         for (let date of Object.keys(allRecordsDate)) {
             if (date >= firstLastDateOfWeek[0] && date <= firstLastDateOfWeek[1]) {
-                recordsOfHabit = recordsOfHabit.concat(allRecordsDate[selectedDate]);
+                recordsOfHabit = recordsOfHabit.concat(allRecordsDate[date]);
             }
         }
     } else if (goalPeriod === "month") {
@@ -368,7 +368,7 @@ function checkIfHabitIsDone(habitId, selectedDate) {
                 new Date(selectedDate).getMonth() === new Date(date).getMonth() &&
                 new Date(selectedDate).getFullYear() === new Date(date).getFullYear()
             ) {
-                recordsOfHabit = recordsOfHabit.concat(allRecordsDate[selectedDate]);
+                recordsOfHabit = recordsOfHabit.concat(allRecordsDate[date]);
             }
         }
     }
@@ -382,11 +382,13 @@ function checkIfHabitIsDone(habitId, selectedDate) {
 
 // habit checkbox when clicking
 function addEventListenerToCheckbox(habitElement, habitId, selectedDate) {
+    let audio = new Audio('sound_effect/mixkit2-fast-small-sweep-transition-166.wav');
     let habitCheckbox = habitElement.querySelector(".habit-checkbox"),
         recordsOfHabit = allRecords[habitId][selectedDate];
     recordsOfHabit = recordsOfHabit ? recordsOfHabit : [];
 
     habitCheckbox.addEventListener("click", function () {
+        audio.play();
         const oldValueOfProgress =
             (checkIfHabitIsDone(habitId, selectedDate)["numOfDoneTimes"] /
                 checkIfHabitIsDone(habitId, selectedDate)["numOfTimes"]) *
@@ -403,6 +405,7 @@ function addEventListenerToCheckbox(habitElement, habitId, selectedDate) {
                 habitCheckbox.classList.remove("clicked");
             }, delayInMilliseconds);
         } else {
+            habitCheckbox.classList.remove("clicked");
             displayCheckboxOfDoneHabit(habitCheckbox);
         }
         // change the progress circle
