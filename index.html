@@ -29,7 +29,8 @@
                 <div><span class="dot"></span></div>
                 <div><span class="dot"></span></div>
             </div>
-            <img src="images/unnamed.png" class="decorated-img" />
+            <img src="images/events-calendar-1.png" class="decorated-img" />
+            <img src="images/My project (1).png" class="decorated-img tick" />
             <h1>Daily Habits</h1>
             <p></p>
         </div>
@@ -38,24 +39,126 @@
             <a href="#" class="btn btn-white btn-animate"><i class="fa fa-plus" aria-hidden="true"></i></a>
             <p>Click (+) to start your journal ...</p>
         </div>
-        <div class="daily-progress">
-            <div class="daily-progress-title">
-                <p id="quote"></p>
-                <p id="percentage"></p>
-            </div>
-            <label for="all-habits-progress"></label>
-            <progress id="all-habits-progress" class="progress-bar" max="100"></progress>
-        </div>
         <div class="habit-field">
-            <label for="blank-habit" class="habit-input">
-                <input type="text" id="blank-habit" placeholder="Add your habit" />
-                <button class="save-button">Save</button>
-            </label>
         </div>
     </main>
+    <footer>
+        <div class="navigation-bar">
+            <button id="add-new-habit-button">+</button>
+        </div>
+        <div class="add-new-habit-field">
+            <div id="add-new-habit-bar">
+                <button id="cancel-button">Cancel</button>
+                <button id="save-button">Save</button>
+            </div>
+            <div id="input-field">
+                <label for="blank-habit" class="habit-input">
+                    <input type="text" id="habit-name" placeholder="Habit name" />
+                </label>
+                <div class="new-habit-setting schedule">
+                    <div class="intro-section">
+                        <i class="fa fa-repeat" aria-hidden="true" style="background-color: #41D996;"></i>
+                        <div class="option">
+                            <p class="option-title">schedule</p>
+                            <p class="selected-items">Everyday</p>
+                        </div>
+                    </div>
+                    <ul class="schedule-option">
+                        <li>
+                            <input type="checkbox" class="checkbox-input" id="Mon" checked>
+                            <label for="Mon">
+                                <span class="checkbox">
+                                </span>
+                            </label>
+                            Mon
+                        </li>
+                        <li>
+                            <input type="checkbox" class="checkbox-input" id="Tue" checked>
+                            <label for="Tue">
+                                <span class="checkbox">
+                                </span>
+                            </label>
+                            Tue
+                        </li>
+                        <li>
+                            <input type="checkbox" class="checkbox-input" id="Wed" checked>
+                            <label for="Wed">
+                                <span class="checkbox">
+                                </span>
+                            </label>
+                            Wed
+                        </li>
+                        <li>
+                            <input type="checkbox" class="checkbox-input" id="Thu" checked>
+                            <label for="Thu">
+                                <span class="checkbox">
+                                </span>
+                            </label>
+                            Thu
+                        </li>
+                        <li>
+                            <input type="checkbox" class="checkbox-input" id="Fri" checked>
+                            <label for="Fri">
+                                <span class="checkbox">
+                                </span>
+                            </label>
+                            Fri
+                        </li>
+                        <li>
+                            <input type="checkbox" class="checkbox-input" id="Sat" checked>
+                            <label for="Sat">
+                                <span class="checkbox">
+                                </span>
+                            </label>
+                            Sat
+                        </li>
+                        <li>
+                            <input type="checkbox" class="checkbox-input" id="Sun" checked>
+                            <label for="Sun">
+                                <span class="checkbox">
+                                </span>
+                            </label>
+                            Sun
+                        </li>
+                    </ul>
+                </div>
+                <div class="new-habit-setting goal">
+                    <div class="intro-section">
+                        <i class="fa fa-bolt" aria-hidden="true" style="background-color: #F4BB0C;"></i>
+                        <div class="option">
+                            <p class="option-title">GOAL</p>
+                            <div class="selected-items">
+                                <label for="num-of-times"><input id="num-of-times" type="number" max="200"
+                                        min="1"></label>
+                                <span>times per</span>
+                                <select id="goal-period">
+                                    <option value="day">day</option>
+                                    <option value="week">week</option>
+                                    <option value="month">month</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="new-habit-setting start-date">
+                    <div class="intro-section">
+                        <i class="fa fa-calendar" aria-hidden="true" style="background-color: #F83EB0;"></i>
+                        <div class="option">
+                            <p class="option-title">Start date</p>
+                            <p class="selected-items">
+                                <label for="startdate"></label>
+                                <input type="date" id="startdate">
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </footer>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script type="text/javascript" src="functions.js"></script>
     <script type="text/javascript" src="my_habit.js"></script>
+
 </body>
 
 </html>
