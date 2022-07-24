@@ -16,15 +16,15 @@ function retrieveDataFromLocal(dataName) {
 
 // update properties of habits to localStorage
 function updateHabit(habitId, property, propertyValue) {
-    allHabits[habitId][property] = propertyValue;
+    ALLHABITS_[habitId][property] = propertyValue;
 }
 
 // update properties of records to localStorage
 function updateRecord(habitId, checkingResult, updateDate) {
-    if (!allRecords[habitId]) {
-        allRecords[habitId] = {};
+    if (!ALLRECORDS_[habitId]) {
+        ALLRECORDS_[habitId] = {};
     }
-    allRecords[habitId][updateDate] = checkingResult;
+    ALLRECORDS_[habitId][updateDate] = checkingResult;
 }
 
 // insert a new node before a centain node
@@ -40,7 +40,7 @@ function getLenOfObject(Obj) {
 // get the array of active habits
 function getActiveHabitIds(selectedDate) {
     let activeHabits = [];
-    for (let [habitId, habitIdProp] of Object.entries(allHabits)) {
+    for (let [habitId, habitIdProp] of Object.entries(ALLHABITS_)) {
         if (
             habitIdProp["startedAt"] === selectedDate &&
             habitIdProp["schedule"].length === 0
@@ -69,8 +69,8 @@ function getDoneHabitIds(selectedDate) {
     const activeHabits = getActiveHabitIds(selectedDate);
 
     for (let habitId of activeHabits) {
-        if (allRecords[habitId]) {
-            if (allRecords[habitId][selectedDate]) {
+        if (ALLRECORDS_[habitId]) {
+            if (ALLRECORDS_[habitId][selectedDate]) {
                 doneHabits.push(habitId);
             }
         }
@@ -82,7 +82,7 @@ function getDoneHabitIds(selectedDate) {
 function displayActiveHabits(numActiveHabits) {
     const header = document.querySelector(".header");
     header.querySelector("p").innerText = `You have ${numActiveHabits} to-do ${numActiveHabits > 1 ? "items" : "item"
-        } ${selectedDate === today ? "today" : ""}`;
+        } ${selectedDate === TODAY_ ? "today" : ""}`;
 }
 
 // calculate the pct of done habits
@@ -198,8 +198,7 @@ function displayCircularProgress(
     let fillProgress = (progressValue) => {
         if (progressValue >= 100) {
             displayCircularProgressOfDoneHabit(progressBar);
-        }
-        else {
+        } else {
             progressBar.style.background = `
                 conic-gradient(
                     rgba(65, 173, 133, 1) ${progressValue * 3.6}deg,
@@ -220,15 +219,15 @@ function displayCircularProgress(
     } else {
         fillProgress(progressStartValue);
     }
-};
+}
 
 function getHabitResult(habitId, selectedDate) {
     const cheerfulWords = ["go ahead", "hold on"];
     if (
-        allHabits[habitId]["goal"][1] === "day" &&
-        allHabits[habitId]["schedule"].length === 7
+        ALLHABITS_[habitId]["goal"][1] === "day" &&
+        ALLHABITS_[habitId]["schedule"].length === 7
     ) {
-        let doneDateArr = Object.keys(allRecords[habitId])
+        let doneDateArr = Object.keys(ALLRECORDS_[habitId])
             .filter(
                 (date) => checkIfHabitIsDone(habitId, date)["isHabitDone"] === true
             )
@@ -284,7 +283,7 @@ function addEventListenerToRemoveButton(element, selectedDate) {
         const habitId = element.getAttribute("data-habit-id");
         /* update deleteAt property in local storage */
         updateHabit(habitId, "deleteAt", deletedTime);
-        storeToLocalStorage(habitTracking, "habitTracking");
+        storeToLocalStorage(HABITTRACKING_, "habitTracking");
         /* remove the element on html */
         element.remove();
         /* update number of active habits */
@@ -339,7 +338,9 @@ function createNewHabitItemDiv(habitId, habitName, selectedDate) {
     // remove checkbox when habit is completed
     if (progressPCT >= 100) {
         displayCheckboxOfDoneHabit(newHabit.querySelector(".habit-checkbox"));
-        displayCircularProgressOfDoneHabit(newHabit.querySelector('.circular-progress'));
+        displayCircularProgressOfDoneHabit(
+            newHabit.querySelector(".circular-progress")
+        );
     }
     // add eventlistener to checkbox
     addEventListenerToCheckbox(newHabit, habitId, selectedDate);
@@ -355,16 +356,16 @@ function createNewHabitItemDiv(habitId, habitName, selectedDate) {
 
 // check the habit is done
 function checkIfHabitIsDone(habitId, selectedDate) {
-    const goalSetting = allHabits[habitId]["goal"];
+    const goalSetting = ALLHABITS_[habitId]["goal"];
     let recordsOfHabit = [];
     (goalPeriod = goalSetting[1]),
         (numOfGoalTimes = goalSetting[0]),
-        (allRecordsDate = allRecords[habitId]);
+        (allRecordsDate = ALLRECORDS_[habitId]);
     allRecordsDate =
         getLenOfObject(allRecordsDate) >= 1 ? allRecordsDate : { selectedDate: [] };
 
     if (goalPeriod === "day") {
-        recordsOfHabit = allRecords[habitId][selectedDate];
+        recordsOfHabit = ALLRECORDS_[habitId][selectedDate];
         recordsOfHabit = recordsOfHabit ? recordsOfHabit : [];
     } else if (goalPeriod === "week") {
         let firstLastDateOfWeek = getFirstLastDateOfWeek(selectedDate);
@@ -397,7 +398,7 @@ function addEventListenerToCheckbox(habitElement, habitId, selectedDate) {
         "sound_effect/mixkit2-fast-small-sweep-transition-166.wav"
     );
     let habitCheckbox = habitElement.querySelector(".habit-checkbox"),
-        recordsOfHabit = allRecords[habitId][selectedDate];
+        recordsOfHabit = ALLRECORDS_[habitId][selectedDate];
     recordsOfHabit = recordsOfHabit ? recordsOfHabit : [];
 
     habitCheckbox.addEventListener("click", function () {
@@ -407,8 +408,8 @@ function addEventListenerToCheckbox(habitElement, habitId, selectedDate) {
                 checkIfHabitIsDone(habitId, selectedDate)["numOfTimes"]) *
             100;
         recordsOfHabit.push(getUnixTimeToday());
-        allRecords[habitId][selectedDate] = recordsOfHabit;
-        storeToLocalStorage(habitTracking, "habitTracking");
+        ALLRECORDS_[habitId][selectedDate] = recordsOfHabit;
+        storeToLocalStorage(HABITTRACKING_, "habitTracking");
         if (!checkIfHabitIsDone(habitId, selectedDate)["isHabitDone"]) {
             // change color when click to checkbox
             habitCheckbox.classList.add("clicked");
@@ -445,7 +446,7 @@ function displayCheckboxOfDoneHabit(habitCheckboxElement) {
 function addNewHabit(habitId, habitName, startDate, schedule, goal) {
     habitName = habitName.length === 0 ? "Your habit" : habitName;
     createdTime = getUnixTimeToday();
-    allHabits[habitId] = {
+    ALLHABITS_[habitId] = {
         createdAt: createdTime,
         startedAt: startDate,
         name: habitName,

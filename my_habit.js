@@ -1,3 +1,4 @@
+/* UDF FOR MAIN PAGE ONLY */
 // display number of items of selected date
 function displayItemsOfSelectedDate(selectedDate) {
     let habitField = document.querySelector(".habit-field"),
@@ -14,7 +15,7 @@ function displayItemsOfSelectedDate(selectedDate) {
         for (let habitId of allActiveHabitIds) {
             const newHabit = createNewHabitItemDiv(
                 habitId,
-                allHabits[habitId]["name"],
+                ALLHABITS_[habitId]["name"],
                 selectedDate
             );
             habitField.appendChild(newHabit);
@@ -75,9 +76,14 @@ function returnToMainScreen(isReturned = true) {
     }
 }
 
+/* DECLARE GLOBAL VARS */
+const HABITTRACKING_ = retrieveDataFromLocal("habitTracking");
+const ALLHABITS_ = HABITTRACKING_["habits"];
+const ALLRECORDS_ = HABITTRACKING_["records"];
+let TODAY_ = formatDate(getUnixTimeToday(), false),
+    selectedDate = TODAY_;
+
 /* SHOW SELECTED DATE ON MAIN PAGE */
-let today = formatDate(getUnixTimeToday(), false),
-    selectedDate = today;
 
 const showableDateArray = getDateArr(
     6,
@@ -116,10 +122,6 @@ showableDates.addEventListener("click", function (event) {
 });
 
 /* INITIALIZE MAIN PAGE LAYOUT WHEN USER VISIT APP */
-const habitTracking = retrieveDataFromLocal("habitTracking");
-const allHabits = habitTracking["habits"];
-const allRecords = habitTracking["records"];
-
 displayItemsOfSelectedDate(selectedDate);
 
 /* CLICK ADD NEW HABIT BUTTON */
@@ -132,7 +134,7 @@ addNewHabitButton.addEventListener("click", function () {
     habitNameInput.focus();
     setTimeout(() => {
         window.scrollTo(0, 0);
-    }, 0.35*1000);
+    }, 0.35 * 1000);
     // remove main screen
     returnToMainScreen(false);
     // default status of all checkboxes is true
@@ -141,7 +143,7 @@ addNewHabitButton.addEventListener("click", function () {
     // show everyday on selected items field
     replaceContentSelectedItems();
     // defaultly display start date is today
-    document.querySelector("#startdate").value = today;
+    document.querySelector("#startdate").value = TODAY_;
     // defaultly show num of times in the goal section
     document.querySelector("#num-of-times").value = 1;
     // defaultly show goal period is week
@@ -185,7 +187,7 @@ saveButton.addEventListener("click", function () {
     // add the new habit to local storage first
     addNewHabit(habitId, habitName, startDate, selectedDayName, getGoalOfHabit());
     updateRecord(habitId, [], startDate);
-    storeToLocalStorage(habitTracking, "habitTracking");
+    storeToLocalStorage(HABITTRACKING_, "habitTracking");
 
     // clear the input value after saving
     document.querySelector("#habit-name").value = "";
@@ -194,4 +196,3 @@ saveButton.addEventListener("click", function () {
     // display
     displayItemsOfSelectedDate(selectedDate);
 });
-

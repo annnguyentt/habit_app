@@ -6,7 +6,7 @@ const allRecords = habitTracking["records"];
 const periodBar = document.querySelector('#period-bar');
 const periodItems = periodBar.querySelectorAll('.period');
 
-periodBar.addEventListener('click', function(event) {
+periodBar.addEventListener('click', function (event) {
     if (event.target.tagName === 'LI') {
         periodItems.forEach(item => item.classList.remove('selected'));
         event.target.classList.add('selected')
@@ -20,6 +20,6 @@ periodBar.addEventListener('click', function(event) {
 function getTotalHabits(selectedPeriod) {
     for (let habitIdProp of Object.values(allHabits)) {
         if (formatDate(habitIdProp['createAt'], false) <= ) {
+        }
     }
-}
 
