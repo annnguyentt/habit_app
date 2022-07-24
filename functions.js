@@ -179,6 +179,12 @@ function getFirstLastDateOfWeek(date, firstDayOfWeek = "mon") {
     return [wkStart, wkEnd];
 }
 
+// display full background color when habit is done
+function displayCircularProgressOfDoneHabit(element) {
+    element.style.background = `rgba(65, 173, 133, 1)`;
+    element.classList.add("done");
+}
+
 // circular progress bar
 function displayCircularProgress(
     habitElement,
@@ -187,32 +193,34 @@ function displayCircularProgress(
     isRunning = false
 ) {
     let progressBar = habitElement.querySelector(".circular-progress");
+    progressEndValue = progressEndValue <= 100 ? progressEndValue : 100;
+
     let fillProgress = (progressValue) => {
-        progressBar.style.background = `
+        if (progressValue >= 100) {
+            displayCircularProgressOfDoneHabit(progressBar);
+        }
+        else {
+            progressBar.style.background = `
                 conic-gradient(
                     rgba(65, 173, 133, 1) ${progressValue * 3.6}deg,
                     rgba(65, 173, 133, 0.3) ${progressValue * 3.6}deg
                 )
             `;
-        if (progressValue === 100) {
-            progressBar.classList.add("done");
         }
     };
-
-    progressEndValue = progressEndValue <= 100 ? progressEndValue : 100;
-    let speed = 0.5;
     if (isRunning) {
+        let speed = 0.1;
         let singleProgress = setInterval(() => {
             progressStartValue++;
+            fillProgress(progressStartValue);
             if (progressStartValue >= progressEndValue) {
                 clearInterval(singleProgress);
             }
-            fillProgress(progressStartValue);
         }, speed);
     } else {
-        fillProgress(progressEndValue);
+        fillProgress(progressStartValue);
     }
-}
+};
 
 function getHabitResult(habitId, selectedDate) {
     const cheerfulWords = ["go ahead", "hold on"];
@@ -239,7 +247,7 @@ function getHabitResult(habitId, selectedDate) {
     } else {
         return `Finished ${habitProgress["numOfDoneTimes"]}/${habitProgress["numOfTimes"]
             } times per ${habitProgress["goalPeriod"]}, ${cheerfulWords[Math.floor(Math.random() * cheerfulWords.length)]
-            } !`;
+            }`;
     }
 }
 
@@ -329,7 +337,10 @@ function createNewHabitItemDiv(habitId, habitName, selectedDate) {
     // fixed dislay of circular progress
     displayCircularProgress(newHabit, 0, progressPCT);
     // remove checkbox when habit is completed
-    if (progressPCT >= 100) { displayCheckboxOfDoneHabit(newHabit.querySelector('.habit-checkbox')); }
+    if (progressPCT >= 100) {
+        displayCheckboxOfDoneHabit(newHabit.querySelector(".habit-checkbox"));
+        displayCircularProgressOfDoneHabit(newHabit.querySelector('.circular-progress'));
+    }
     // add eventlistener to checkbox
     addEventListenerToCheckbox(newHabit, habitId, selectedDate);
     // add click event to remove button
@@ -382,7 +393,9 @@ function checkIfHabitIsDone(habitId, selectedDate) {
 
 // habit checkbox when clicking
 function addEventListenerToCheckbox(habitElement, habitId, selectedDate) {
-    let audio = new Audio('sound_effect/mixkit2-fast-small-sweep-transition-166.wav');
+    let audio = new Audio(
+        "sound_effect/mixkit2-fast-small-sweep-transition-166.wav"
+    );
     let habitCheckbox = habitElement.querySelector(".habit-checkbox"),
         recordsOfHabit = allRecords[habitId][selectedDate];
     recordsOfHabit = recordsOfHabit ? recordsOfHabit : [];
@@ -405,7 +418,6 @@ function addEventListenerToCheckbox(habitElement, habitId, selectedDate) {
                 habitCheckbox.classList.remove("clicked");
             }, delayInMilliseconds);
         } else {
-            habitCheckbox.classList.remove("clicked");
             displayCheckboxOfDoneHabit(habitCheckbox);
         }
         // change the progress circle
@@ -425,8 +437,8 @@ function addEventListenerToCheckbox(habitElement, habitId, selectedDate) {
 
 // display checkbox of done habits
 function displayCheckboxOfDoneHabit(habitCheckboxElement) {
+    habitCheckboxElement.classList.remove("clicked");
     habitCheckboxElement.classList.add("done");
-    habitCheckboxElement.innerText = "";
 }
 
 // add new habit to localStorage
