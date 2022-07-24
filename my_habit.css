@@ -27,6 +27,7 @@ body.stop-scrolling {
 .body-container {
     max-width: 760px;
     margin: 0 auto;
+    overflow-y: auto;
 }
 
 .decorated-img {
@@ -154,7 +155,6 @@ div .dot {
     padding: 5px;
     border: solid 1px #e0e4f7;
     border-radius: 10px;
-    aspect-ratio: 1/1;
     width: 80px;
     display: flex;
     align-items: center;
@@ -224,10 +224,7 @@ div .dot {
     font-style: italic;
 }
 
-.add-new-habit > img {
-    transform: rotate(90deg);
-    width: 150px;
-}
+
 
 .daily-progress {
     display: none;
@@ -527,7 +524,7 @@ div .dot {
     align-items: center;
     justify-content: center;
     border-radius: 10px;
-    background: linear-gradient(304deg, rgba(252,93,190,1) 0%, rgba(247,137,63,1) 100%);
+    background: linear-gradient(304deg, rgba(252, 93, 190, 1) 0%, rgba(247, 137, 63, 1) 100%);
     color: white;
     width: 49px;
     height: 40px;
@@ -548,6 +545,7 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
 }
 
 .navigation-bar {
@@ -566,6 +564,13 @@ footer {
     padding: 10px;
 }
 
+.add-new-habit>img {
+    transform: rotate(90deg);
+    width: 150px;
+    position: absolute;
+    bottom: 85px;
+}
+
 #add-new-habit-button {
     display: flex;
     justify-content: center;
@@ -575,10 +580,16 @@ footer {
     border-radius: 50%;
     background-color: #2E0D5F;
     border: none;
-    color: white;
+
     font-size: 40px;
     cursor: pointer;
     box-shadow: rgba(129, 82, 255, 0.2) 0px 7px 29px 0px;
+    position: relative;
+}
+
+#add-new-habit-button>span {
+    color: white;
+    display: inline-block;
 }
 
 .add-new-habit-field {
@@ -829,4 +840,24 @@ footer {
     position: relative;
     color: #231c3db5;
     font-size: 12px;
+}
+
+@media (max-width: 370px) {
+    .date {
+        padding: 0;
+    }
+}
+
+@media (min-height: 1000px) {
+    .header {
+        height: 190px;
+    }
+
+    .navigation-bar {
+        height: 96px;
+    }
+
+    .add-new-habit {
+        height: 66vh;
+    }
 }
