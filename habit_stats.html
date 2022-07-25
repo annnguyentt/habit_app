@@ -27,41 +27,58 @@
 </head>
 
 <body>
-    <main class="header">
-        <h1><span>Stats</span></h1>
-        <ul id="period-bar">
-            <li class="period selected">This Week</li>
-            <li class="period">This Month</li>
-            <li class="period">Last Month</li>
-            <li class="period">Last 30 Days</li>
-            <li class="period">Last 60 Days</li>
-            <li class="period">Custom</li>
-        </ul>
-    </main>
-    <div class="stats-display">
-        <div id="overview">
-            <div id="total-habit">
-                <i class="fa fa-star" aria-hidden="true" style="color:#F4BB0C;"></i>
-                <p class="item-value">20</p>
-                <p class="item-name">Total habits</p>
-            </div>
-            <div id="longest-streak">
-                <i class="fa fa-rocket" aria-hidden="true" style="color:#8152FF;"></i>
-                <p class="item-value">27 Days</p>
-                <p class="item-name">Longest streak</p>
-            </div>
-            <div id="fully-done">
-                <i class="fa fa-check" aria-hidden="true" style="color: #41D996;"></i>
-                <p class="item-value">10</p>
-                <p class="item-name">Fully done habits</p>
-            </div>
-            <div id="overview-item">
-                <i class="fa fa-bolt" aria-hidden="true" style="color: #FC5DBE; transform: rotate(10deg);"></i>
-                <p class="item-value">10 %</p>
-                <p class="item-name">Completion rate</p>
+    <main class="body-container">
+        <div class="header">
+            <h1><span>Stats</span></h1>
+            <ul id="period-bar">
+                <li class="period selected">This Week</li>
+                <li class="period">This Month</li>
+                <li class="period">Last Month</li>
+                <li class="period">Last 30 Days</li>
+                <li class="period">Last 60 Days</li>
+                <li class="period">Custom</li>
+            </ul>
+        </div>
+        <div class="stats-display">
+            <div id="overview">
+                <div id="total-habit">
+                    <i class="fa fa-star" aria-hidden="true" style="color:#F4BB0C;"></i>
+                    <p class="item-value">20</p>
+                    <p class="item-name">Total habits</p>
+                </div>
+                <div id="longest-streak">
+                    <i class="fa fa-rocket" aria-hidden="true" style="color:#8152FF;"></i>
+                    <p class="item-value">27 Days</p>
+                    <p class="item-name">Longest streak</p>
+                </div>
+                <div id="fully-done">
+                    <i class="fa fa-check" aria-hidden="true" style="color: #41D996;"></i>
+                    <p class="item-value">10</p>
+                    <p class="item-name">Fully done habits</p>
+                </div>
+                <div id="overview-item">
+                    <i class="fa fa-bolt" aria-hidden="true" style="color: #FC5DBE; transform: rotate(10deg);"></i>
+                    <p class="item-value">10 %</p>
+                    <p class="item-name">Completion rate</p>
+                </div>
             </div>
         </div>
-    </div>
+    </main>
+    <footer>
+        <div class="navigation-bar">
+            <a href="index.html" class="nav-button">
+                <i class="fa fa-list-ul" aria-hidden="true"></i>
+                <span>Daily habits</span>
+            </a>
+            <div id="add-new-habit-button">
+                <span>+</span>
+            </div>
+            <a href="habit_stats.html" class="nav-button selected">
+                <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                <span>Stats</span>
+            </a>
+        </div>
+    </footer>
     <script type="text/javascript" src="functions.js"></script>
     <script type="text/javascript" src="habit_stats.js"></script>
 </body>

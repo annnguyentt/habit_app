@@ -229,7 +229,7 @@ div .dot {
 
 .habit-field.opened {
     padding: 10px 20px 20px 20px;
-    padding-bottom: 85px;
+    padding-bottom: 110px;
     overflow-y: auto;
     position: relative;
     display: block;
@@ -403,17 +403,15 @@ footer {
 .navigation-bar {
     width: 100%;
     max-width: 760px;
-    height: 85px;
-    display: flex;
+    display: grid;
     position: fixed;
     bottom: 0;
     background-color: white;
     z-index: 20;
-    justify-content: center;
     align-items: center;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-    padding: 10px;
+    padding: 20px;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: solid 1px rgba(113, 50, 212, 0.1);
 }
 
 .add-new-habit>img {
@@ -427,15 +425,16 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 75%;
+    height: 65px;
     aspect-ratio: 1/1;
     border-radius: 50%;
     background-color: #2E0D5F;
     border: none;
     font-size: 40px;
     cursor: pointer;
-    box-shadow: rgba(129, 82, 255, 0.2) 0px 7px 29px 0px;
+    box-shadow: rgb(129 82 255 / 20%) 0px 7px 29px 0px;
     position: relative;
+    margin: 0 auto;
 }
 
 #add-new-habit-button>span {
@@ -477,6 +476,24 @@ footer {
     color: var(--color-base);
     cursor: pointer;
     font-size: 16px;
+}
+
+.nav-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: rgba(164, 179, 185, 1);
+}
+
+.nav-button.selected {
+    color: rgba(82, 72, 162, 1);
+}
+
+.nav-button > span {
+    padding-top: 10px;
+    font-family: var(--font-header);
+    letter-spacing: 0.4px;
 }
 
 #input-field {
