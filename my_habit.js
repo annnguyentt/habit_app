@@ -22,6 +22,9 @@ function displayItemsOfSelectedDate(selectedDate) {
             idx += 1;
         }
     }
+    else {
+        displayMainPage(type='initial');
+    }
 }
 
 // return goal of habit
