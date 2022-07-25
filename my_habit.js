@@ -7,7 +7,7 @@ function displayItemsOfSelectedDate(selectedDate) {
     displayActiveHabits(numActiveHabits);
     document.querySelectorAll(".habit-display").forEach((e) => e.remove());
     if (numActiveHabits >= 1) {
-        openMainPage();
+        displayMainPage();
         let idx = 0;
         let allActiveHabitIds = getSortedHabitArray(
             getActiveHabitIds(selectedDate)

@@ -15,7 +15,7 @@ function retrieveDataFromLocal(dataName) {
 }
 
 // update properties of habits to localStorage
-function updateHabit(habitId, property, propertyValue) {
+function updateHabitProps(habitId, property, propertyValue) {
     ALLHABITS_[habitId][property] = propertyValue;
 }
 
@@ -63,36 +63,13 @@ function getActiveHabitIds(selectedDate) {
     return activeHabits;
 }
 
-// calculate number of completed habits
-function getDoneHabitIds(selectedDate) {
-    let doneHabits = [];
-    const activeHabits = getActiveHabitIds(selectedDate);
-
-    for (let habitId of activeHabits) {
-        if (ALLRECORDS_[habitId]) {
-            if (ALLRECORDS_[habitId][selectedDate]) {
-                doneHabits.push(habitId);
-            }
-        }
-    }
-    return doneHabits;
-}
-
 // display num of active habits on the chosen date
 function displayActiveHabits(numActiveHabits) {
     const header = document.querySelector(".header");
-    header.querySelector("p").innerText = `You have ${numActiveHabits} to-do ${numActiveHabits > 1 ? "items" : "item"
-        } ${selectedDate === TODAY_ ? "today" : ""}`;
-}
-
-// calculate the pct of done habits
-function calDoneHabitsPCT(selectedDate) {
-    const progressPCT = Math.round(
-        (getDoneHabitIds(selectedDate).length /
-            getActiveHabitIds(selectedDate).length) *
-        100
-    );
-    return progressPCT;
+    header.querySelector("p").innerText = `
+            You have ${numActiveHabits} to-do ${numActiveHabits > 1 ? "items" : "item"
+        } ${selectedDate === TODAY_ ? "today" : ""}
+        `;
 }
 
 // sort an array
@@ -149,11 +126,16 @@ function formatDate(unixTime, toDisplay = true) {
 }
 
 // open main page
-function openMainPage() {
+function displayMainPage(type='normal') {
     let addNewButton = document.querySelector(".add-new-habit"),
         habitField = document.querySelector(".habit-field");
-    addNewButton.classList.add("clicked");
-    habitField.classList.add("opened");
+    if (type === 'normal') {
+        addNewButton.classList.add("clicked");
+        habitField.classList.add("opened");
+    } else if (type === 'initial') {
+        addNewButton.classList.remove("clicked");
+        habitField.classList.remove("opened");
+    }
 }
 
 // get first and last date of a date
@@ -221,8 +203,10 @@ function displayCircularProgress(
     }
 }
 
+// get goal result of each habit
 function getHabitResult(habitId, selectedDate) {
     const cheerfulWords = ["go ahead", "hold on"];
+    /* habits that have goal of everyday */
     if (
         ALLHABITS_[habitId]["goal"][1] === "day" &&
         ALLHABITS_[habitId]["schedule"].length === 7
@@ -233,6 +217,7 @@ function getHabitResult(habitId, selectedDate) {
             )
             .sort()
             .reverse();
+        /* if users have just checked in yesterday or today then return number of days of streak */ 
         if (calTwoStringDates(doneDateArr[0], selectedDate) <= 86400 * 1000) {
             let numDaysStreak = countNumDaysStreak(doneDateArr);
             if (numDaysStreak >= 1) {
@@ -282,13 +267,15 @@ function addEventListenerToRemoveButton(element, selectedDate) {
     removeButton.addEventListener("click", function () {
         const habitId = element.getAttribute("data-habit-id");
         /* update deleteAt property in local storage */
-        updateHabit(habitId, "deleteAt", deletedTime);
+        updateHabitProps(habitId, "deleteAt", deletedTime);
         storeToLocalStorage(HABITTRACKING_, "habitTracking");
         /* remove the element on html */
         element.remove();
         /* update number of active habits */
         let numActiveHabits = getActiveHabitIds(selectedDate).length;
+        if (numActiveHabits <= 0) {displayMainPage('initial')};
         displayActiveHabits(numActiveHabits);
+        /* return to initial page if there is no active habit */
     });
 }
 
