@@ -209,46 +209,160 @@ periodBar.addEventListener("click", function (event) {
 
 /* BAR CHART */
 // Bar Chart
-let high_prices_appl = [];
+// let high_prices_appl = [];
 
-const dates = getDatesArrFromStartEnd('2022-07-01', '2022-07-25');
-for (let i of dates) {
+// const dates = getDatesArrFromStartEnd('2022-07-01', '2022-07-25');
+// for (let i of dates) {
+//     high_prices_appl.push(getValueOfEachMetric([i, i], 'total-habit')['value'])
+// }
+
+
+// let high_prices_spot = [
+//     // 138.72, 137.26, 139.81, 135.37, 
+//     // 135.38, 125.91, 125.93, 134.59, 
+//     // 139.86, 147.5 
+// ];
+
+// for (let i of dates) {
+//     high_prices_spot.push(getValueOfEachMetric([i, i], 'fully-done')['value'])
+// }
+
+// const data = {
+//     labels: dates,
+//     datasets: [
+//         {
+//             label: 'Total habits',
+//             backgroundColor: 'rgba(247, 194, 228, 1)',
+//             borderColor: 'rgba(247, 194, 228, 1)',
+//             data: high_prices_appl
+//         },
+//         {
+//             label: 'Completed habits',
+//             backgroundColor: 'rgba(252, 93, 191, 1)',
+//             borderColor: 'rgba(252, 93, 191, 1)',
+//             data: high_prices_spot
+//         }
+//     ]
+// };
+// const config_bar = {
+//     type: 'bar',
+//     data: data,
+//     options: {
+//         responsive: false,
+//         scales: {
+//             x: {
+//                 grid: {
+//                     display: false,
+//                 }
+//             },
+//             y: {
+//                 grid: {
+//                     display: false
+//                 }
+//             },
+//         }
+//     }
+// };
+// const myBarChart = new Chart(document.getElementById('barChart'), config_bar);
+
+// const labels = ['feb', 'jan', 'aug', 'sep'];
+const labels = getDatesArrFromStartEnd('2022-07-01', '2022-07-25');
+
+let high_prices_appl = [];
+for (let i of labels) {
     high_prices_appl.push(getValueOfEachMetric([i, i], 'total-habit')['value'])
 }
 
-
-let high_prices_spot = [ 
-    // 138.72, 137.26, 139.81, 135.37, 
-    // 135.38, 125.91, 125.93, 134.59, 
-    // 139.86, 147.5 
-];
-
-for (let i of dates) {
+let high_prices_spot = [];
+for (let i of labels) {
     high_prices_spot.push(getValueOfEachMetric([i, i], 'fully-done')['value'])
 }
 
+let sum = high_prices_spot.map(function (num, idx) {
+    return num / high_prices_appl[idx] * 100;
+  }); 
+
 const data = {
-    labels: dates,
+    labels: labels,
     datasets: [
         {
-            label: 'Total habits',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: high_prices_appl
+            label: 'Completion rate (%)',
+            data: sum,
+            backgroundColor: '#828DF5',
+            borderColor: '#828DF5',
+            type: 'line',
+            yAxisID: 'y1',
         },
         {
             label: 'Completed habits',
-            backgroundColor: 'rgb(0, 0, 255)',
-            borderColor: 'rgb(0, 0, 255)',
-            data: high_prices_spot
+            data: high_prices_spot,
+            backgroundColor: 'rgba(252, 93, 191, 1)',
+            type: 'bar',
+            yAxisID: 'y',
+
+        },
+        {
+            label: 'Total habits',
+            data: high_prices_appl,
+            backgroundColor: 'rgba(247, 194, 228, 0.6)',
+            type: 'bar',
+            yAxisID: 'y',
         }
     ]
 };
-const config_bar = {
-    type: 'bar',
+
+const config = {
     data: data,
     options: {
-        responsive: false
-    },
+        responsive: true,
+        scales: {
+            y1: {
+                stacked: false,
+                grid: {
+                    display: false,
+                },
+                position: 'right',
+                display: false, 
+            },
+            x: {
+                stacked: true,
+                grid: {
+                    display: false,
+                },
+                ticks: {
+                    font: {
+                        size: '14px',
+                    }
+                }  
+            },
+            y: {
+                stacked: false,
+                grid: {
+                    display: false,
+                },
+                position: 'left',
+                ticks: {
+                    font: {
+                        size: '14px',
+                    }
+                }  
+            },
+        },
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top',
+                labels: {
+                    font: {
+                        size: '13px',
+                    },
+                    color: '#8299A1',
+                }
+            }
+        }
+    }
 };
-const myBarChart = new Chart(document.getElementById('barChart'), config_bar);
+// Chart.defaults.font.size = '14px';
+Chart.defaults.color = '#112429a2';
+
+const myBarChart = new Chart(document.getElementById('barChart'), config);
