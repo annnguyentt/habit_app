@@ -16,15 +16,15 @@ function retrieveDataFromLocal(dataName) {
 
 // update properties of habits to localStorage
 function updateHabitProps(habitId, property, propertyValue) {
-    ALLHABITS_[habitId][property] = propertyValue;
+    ALL_HABITS[habitId][property] = propertyValue;
 }
 
 // update properties of records to localStorage
 function updateRecord(habitId, checkingResult, updateDate) {
-    if (!ALLRECORDS_[habitId]) {
-        ALLRECORDS_[habitId] = {};
+    if (!ALL_RECORDS[habitId]) {
+        ALL_RECORDS[habitId] = {};
     }
-    ALLRECORDS_[habitId][updateDate] = checkingResult;
+    ALL_RECORDS[habitId][updateDate] = checkingResult;
 }
 
 // insert a new node before a centain node
@@ -40,7 +40,7 @@ function getLenOfObject(Obj) {
 // get the array of active habits
 function getActiveHabitIds(selectedDate) {
     let activeHabits = [];
-    for (let [habitId, habitIdProp] of Object.entries(ALLHABITS_)) {
+    for (let [habitId, habitIdProp] of Object.entries(ALL_HABITS)) {
         if (
             habitIdProp["startedAt"] === selectedDate &&
             habitIdProp["schedule"].length === 0
@@ -138,6 +138,16 @@ function displayMainPage(type='normal') {
     }
 }
 
+// get first and last date of a month
+function getFirstLastDateOfMonth(date) {
+    let newDate = new Date(date);
+    let month = newDate.getMonth(),
+        year = newDate.getFullYear();
+    let firstDateOfMonth = formatDate(new Date(year, month, 1), false),
+        lastDateOfMonth = formatDate(new Date(year, month+1, 0), false);
+    return [firstDateOfMonth, lastDateOfMonth];
+};
+
 // get first and last date of a date
 function getFirstLastDateOfWeek(date, firstDayOfWeek = "mon") {
     let newDate = new Date(date),
@@ -208,10 +218,10 @@ function getHabitResult(habitId, selectedDate) {
     const cheerfulWords = ["go ahead", "hold on"];
     /* habits that have goal of everyday */
     if (
-        ALLHABITS_[habitId]["goal"][1] === "day" &&
-        ALLHABITS_[habitId]["schedule"].length === 7
+        ALL_HABITS[habitId]["goal"][1] === "day" &&
+        ALL_HABITS[habitId]["schedule"].length === 7
     ) {
-        let doneDateArr = Object.keys(ALLRECORDS_[habitId])
+        let doneDateArr = Object.keys(ALL_RECORDS[habitId])
             .filter(
                 (date) => checkIfHabitIsDone(habitId, date)["isHabitDone"] === true
             )
@@ -267,8 +277,8 @@ function addEventListenerToRemoveButton(element, selectedDate) {
     removeButton.addEventListener("click", function () {
         const habitId = element.getAttribute("data-habit-id");
         /* update deleteAt property in local storage */
-        updateHabitProps(habitId, "deleteAt", deletedTime);
-        storeToLocalStorage(HABITTRACKING_, "habitTracking");
+        updateHabitProps(habitId, "deletedAt", deletedTime);
+        storeToLocalStorage(HABIT_TRACKING, "habitTracking");
         /* remove the element on html */
         element.remove();
         /* update number of active habits */
@@ -343,16 +353,16 @@ function createNewHabitItemDiv(habitId, habitName, selectedDate) {
 
 // check the habit is done
 function checkIfHabitIsDone(habitId, selectedDate) {
-    const goalSetting = ALLHABITS_[habitId]["goal"];
+    const goalSetting = ALL_HABITS[habitId]["goal"];
     let recordsOfHabit = [];
     (goalPeriod = goalSetting[1]),
         (numOfGoalTimes = goalSetting[0]),
-        (allRecordsDate = ALLRECORDS_[habitId]);
+        (allRecordsDate = ALL_RECORDS[habitId]);
     allRecordsDate =
         getLenOfObject(allRecordsDate) >= 1 ? allRecordsDate : { selectedDate: [] };
 
     if (goalPeriod === "day") {
-        recordsOfHabit = ALLRECORDS_[habitId][selectedDate];
+        recordsOfHabit = ALL_RECORDS[habitId][selectedDate];
         recordsOfHabit = recordsOfHabit ? recordsOfHabit : [];
     } else if (goalPeriod === "week") {
         let firstLastDateOfWeek = getFirstLastDateOfWeek(selectedDate);
@@ -362,11 +372,9 @@ function checkIfHabitIsDone(habitId, selectedDate) {
             }
         }
     } else if (goalPeriod === "month") {
+        let firstLastDateOfMonth = getFirstLastDateOfMonth(selectedDate);
         for (let date of Object.keys(allRecordsDate)) {
-            if (
-                new Date(selectedDate).getMonth() === new Date(date).getMonth() &&
-                new Date(selectedDate).getFullYear() === new Date(date).getFullYear()
-            ) {
+            if (date >= firstLastDateOfMonth[0] && date <= firstLastDateOfMonth[1]) {
                 recordsOfHabit = recordsOfHabit.concat(allRecordsDate[date]);
             }
         }
@@ -385,7 +393,7 @@ function addEventListenerToCheckbox(habitElement, habitId, selectedDate) {
         "sound_effect/mixkit2-fast-small-sweep-transition-166.wav"
     );
     let habitCheckbox = habitElement.querySelector(".habit-checkbox"),
-        recordsOfHabit = ALLRECORDS_[habitId][selectedDate];
+        recordsOfHabit = ALL_RECORDS[habitId][selectedDate];
     recordsOfHabit = recordsOfHabit ? recordsOfHabit : [];
 
     habitCheckbox.addEventListener("click", function () {
@@ -395,8 +403,8 @@ function addEventListenerToCheckbox(habitElement, habitId, selectedDate) {
                 checkIfHabitIsDone(habitId, selectedDate)["numOfTimes"]) *
             100;
         recordsOfHabit.push(getUnixTimeToday());
-        ALLRECORDS_[habitId][selectedDate] = recordsOfHabit;
-        storeToLocalStorage(HABITTRACKING_, "habitTracking");
+        ALL_RECORDS[habitId][selectedDate] = recordsOfHabit;
+        storeToLocalStorage(HABIT_TRACKING, "habitTracking");
         if (!checkIfHabitIsDone(habitId, selectedDate)["isHabitDone"]) {
             // change color when click to checkbox
             habitCheckbox.classList.add("clicked");
@@ -433,7 +441,7 @@ function displayCheckboxOfDoneHabit(habitCheckboxElement) {
 function addNewHabit(habitId, habitName, startDate, schedule, goal) {
     habitName = habitName.length === 0 ? "Your habit" : habitName;
     createdTime = getUnixTimeToday();
-    ALLHABITS_[habitId] = {
+    ALL_HABITS[habitId] = {
         createdAt: createdTime,
         startedAt: startDate,
         name: habitName,
@@ -442,3 +450,4 @@ function addNewHabit(habitId, habitName, startDate, schedule, goal) {
         goal: goal,
     };
 }
+

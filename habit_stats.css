@@ -1,6 +1,6 @@
 :root {
     --background-color: white;
-    --font-header: 'Ubuntu', 'Open Sans',sans-serif;
+    --font-header: 'Ubuntu', 'Open Sans', sans-serif;
     --font-base: 'Lato', 'Open Sans', sans-serif;
     --font-section: 'Comfortaa', 'Open Sans', sans-serif;
     --font-size: 16px;
@@ -11,14 +11,17 @@
     --color-font: #2A3C3F;
     --color-font-shadow: #112429;
 }
+
 body {
     background-color: white;
     font-family: var(--font-base);
 }
+
 .header {
     height: auto;
     background-color: white;
 }
+
 h1 {
     color: black;
     position: relative;
@@ -37,6 +40,7 @@ h1 {
     width: 100%;
     overflow-x: auto;
     list-style: none;
+    justify-content: space-between;
 }
 
 .period {
@@ -44,7 +48,7 @@ h1 {
     letter-spacing: 0.5px;
     color: rgba(46, 13, 95, 0.6);
     text-align: center;
-    padding: 10px 0;
+    padding: 10px 5px;
     margin: 0 5px;
     border: solid 1px #e0e4f7;
     border-radius: 20px;
@@ -52,6 +56,9 @@ h1 {
     min-width: 110px;
     font-size: 15px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .period.selected {
@@ -59,6 +66,15 @@ h1 {
     background-color: #FFE188;
     border: solid 1px #F7E0BD;
     font-weight: 600;
+}
+
+#period-display {
+    position: absolute;
+    right: 0;
+    margin: 0 25px;
+    font-size: 14px;
+    color: #112429a2;
+    font-style: italic;
 }
 
 .stats-display {
@@ -75,23 +91,37 @@ h1 {
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
 }
-#overview > div {
+
+#overview>div {
     padding: 15px;
     margin: 5px;
     border-radius: 15px;
     background-color: #ece5fce1;
 }
-#overview > div i {
+
+#overview>div i {
     font-size: 25px;
     margin: 0;
 }
+
 .item-value {
     font-weight: 600;
     font-size: 19px;
-    margin: 15px 0;
+    margin: 15px 4px;
 }
+
 .item-name {
     color: #8299A1;
-    margin: 0;
+    margin: 0 4px;
     font-size: 15px;
+}
+
+#add-new-habit-button {
+    background-color: rgba(164, 179, 185, 1);
+    box-shadow: none;
+    cursor: none;
+}
+
+#completion-rate-bar-chart {
+    padding-bottom: 110px;
 }

@@ -15,7 +15,7 @@ function displayItemsOfSelectedDate(selectedDate) {
         for (let habitId of allActiveHabitIds) {
             const newHabit = createNewHabitItemDiv(
                 habitId,
-                ALLHABITS_[habitId]["name"],
+                ALL_HABITS[habitId]["name"],
                 selectedDate
             );
             habitField.appendChild(newHabit);
@@ -80,9 +80,9 @@ function returnToMainScreen(isReturned = true) {
 }
 
 /* DECLARE GLOBAL VARS */
-const HABITTRACKING_ = retrieveDataFromLocal("habitTracking");
-const ALLHABITS_ = HABITTRACKING_["habits"];
-const ALLRECORDS_ = HABITTRACKING_["records"];
+const HABIT_TRACKING = retrieveDataFromLocal("habitTracking");
+const ALL_HABITS = HABIT_TRACKING["habits"];
+const ALL_RECORDS = HABIT_TRACKING["records"];
 let TODAY_ = formatDate(getUnixTimeToday(), false),
     selectedDate = TODAY_;
 
@@ -189,7 +189,7 @@ saveButton.addEventListener("click", function () {
     // add the new habit to local storage first
     addNewHabit(habitId, habitName, startDate, selectedDayName, getGoalOfHabit());
     updateRecord(habitId, [], startDate);
-    storeToLocalStorage(HABITTRACKING_, "habitTracking");
+    storeToLocalStorage(HABIT_TRACKING, "habitTracking");
 
     // clear the input value after saving
     document.querySelector("#habit-name").value = "";

@@ -24,6 +24,12 @@
         href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap"
         rel="stylesheet">
     <link rel="manifest" href="/manifest.json" />
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
 </head>
 
 <body>
@@ -36,33 +42,39 @@
                 <li class="period">Last Month</li>
                 <li class="period">Last 30 Days</li>
                 <li class="period">Last 60 Days</li>
-                <li class="period">Custom</li>
+                <li class="period" id="custom">Custom</li>
             </ul>
         </div>
+        <div id="period-display">From 2022-01-01 To 2022-09-01</div>
         <div class="stats-display">
             <div id="overview">
                 <div id="total-habit">
                     <i class="fa fa-star" aria-hidden="true" style="color:#F4BB0C;"></i>
-                    <p class="item-value">20</p>
+                    <p class="item-value"></p>
                     <p class="item-name">Total habits</p>
-                </div>
-                <div id="longest-streak">
-                    <i class="fa fa-rocket" aria-hidden="true" style="color:#8152FF;"></i>
-                    <p class="item-value">27 Days</p>
-                    <p class="item-name">Longest streak</p>
                 </div>
                 <div id="fully-done">
                     <i class="fa fa-check" aria-hidden="true" style="color: #41D996;"></i>
-                    <p class="item-value">10</p>
+                    <p class="item-value"></p>
                     <p class="item-name">Fully done habits</p>
                 </div>
-                <div id="overview-item">
+                <div id="longest-streak">
+                    <i class="fa fa-rocket" aria-hidden="true" style="color:#8152FF;"></i>
+                    <p class="item-value"></p>
+                    <p class="item-name">Longest streak</p>
+                </div>
+                <div id="completion-rate">
                     <i class="fa fa-bolt" aria-hidden="true" style="color: #FC5DBE; transform: rotate(10deg);"></i>
-                    <p class="item-value">10 %</p>
+                    <p class="item-value"></p>
                     <p class="item-name">Completion rate</p>
                 </div>
             </div>
         </div>
+        <div id="completion-rate-bar-chart">
+            <canvas id="barChart" width="500" height="500"></canvas>
+
+        </div>
+
     </main>
     <footer>
         <div class="navigation-bar">
@@ -81,4 +93,17 @@
     </footer>
     <script type="text/javascript" src="functions.js"></script>
     <script type="text/javascript" src="habit_stats.js"></script>
+    <script>
+        $(function () {
+            $('#custom').daterangepicker({
+                locale: {
+                    format: 'YYYY-MM-DD'
+                }
+            });
+        });
+        $('#custom').on('cancel.daterangepicker', function (ev, picker) {
+            $('#custom').val('');
+        });
+    </script>
+
 </body>

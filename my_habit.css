@@ -28,6 +28,7 @@ body.stop-scrolling {
     max-width: 760px;
     margin: 0 auto;
     overflow-y: auto;
+    position: relative;
 }
 
 .decorated-img {
