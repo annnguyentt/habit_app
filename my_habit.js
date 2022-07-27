@@ -73,6 +73,7 @@ function returnToMainScreen(isReturned = true) {
         addNewHabitField.classList.remove("opened");
         body.classList.remove("stop-scrolling");
         scheduleOption.classList.remove("opened");
+        habitNameInput.blur();
     } else {
         addNewHabitField.classList.add("opened");
         body.classList.add("stop-scrolling");
