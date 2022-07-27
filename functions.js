@@ -42,19 +42,19 @@ function getActiveHabitIds(selectedDate) {
     let activeHabits = [];
     for (let [habitId, habitIdProp] of Object.entries(ALL_HABITS)) {
         if (
-            habitIdProp["startedAt"] === selectedDate &&
-            habitIdProp["schedule"].length === 0
-        ) {
-            activeHabits.push(habitId);
-        } else if (
-            habitIdProp["startedAt"] <= selectedDate &&
-            habitIdProp["schedule"].includes(
-                getDayName(new Date(selectedDate).getDay())
-            )
+            (formatDate(habitIdProp["deletedAt"], false) > selectedDate) ||
+            (!habitIdProp["deletedAt"])
         ) {
             if (
-                !habitIdProp["deleteAt"] ||
-                formatDate(habitIdProp["deleteAt"], false) > selectedDate
+                habitIdProp["startedAt"] === selectedDate &&
+                habitIdProp["schedule"].length === 0
+            ) {
+                activeHabits.push(habitId);
+            } else if (
+                habitIdProp["startedAt"] <= selectedDate &&
+                habitIdProp["schedule"].includes(
+                    getDayName(new Date(selectedDate).getDay())
+                )
             ) {
                 activeHabits.push(habitId);
             }
@@ -126,13 +126,13 @@ function formatDate(unixTime, toDisplay = true) {
 }
 
 // open main page
-function displayMainPage(type='normal') {
+function displayMainPage(type = "normal") {
     let addNewButton = document.querySelector(".add-new-habit"),
         habitField = document.querySelector(".habit-field");
-    if (type === 'normal') {
+    if (type === "normal") {
         addNewButton.classList.add("clicked");
         habitField.classList.add("opened");
-    } else if (type === 'initial') {
+    } else if (type === "initial") {
         addNewButton.classList.remove("clicked");
         habitField.classList.remove("opened");
     }
@@ -144,9 +144,9 @@ function getFirstLastDateOfMonth(date) {
     let month = newDate.getMonth(),
         year = newDate.getFullYear();
     let firstDateOfMonth = formatDate(new Date(year, month, 1), false),
-        lastDateOfMonth = formatDate(new Date(year, month+1, 0), false);
+        lastDateOfMonth = formatDate(new Date(year, month + 1, 0), false);
     return [firstDateOfMonth, lastDateOfMonth];
-};
+}
 
 // get first and last date of a date
 function getFirstLastDateOfWeek(date, firstDayOfWeek = "mon") {
@@ -227,7 +227,7 @@ function getHabitResult(habitId, selectedDate) {
             )
             .sort()
             .reverse();
-        /* if users have just checked in yesterday or today then return number of days of streak */ 
+        /* if users have just checked in yesterday or today then return number of days of streak */
         if (calTwoStringDates(doneDateArr[0], selectedDate) <= 86400 * 1000) {
             let numDaysStreak = countNumDaysStreak(doneDateArr);
             if (numDaysStreak >= 1) {
@@ -283,7 +283,9 @@ function addEventListenerToRemoveButton(element, selectedDate) {
         element.remove();
         /* update number of active habits */
         let numActiveHabits = getActiveHabitIds(selectedDate).length;
-        if (numActiveHabits <= 0) {displayMainPage('initial')};
+        if (numActiveHabits <= 0) {
+            displayMainPage("initial");
+        }
         displayActiveHabits(numActiveHabits);
         /* return to initial page if there is no active habit */
     });
@@ -451,8 +453,7 @@ function addNewHabit(habitId, habitName, startDate, schedule, goal) {
     };
 }
 
-
 // drop dup in array
 function dropDuplicate(value, index, self) {
     return self.indexOf(value) === index;
-  }
+}
