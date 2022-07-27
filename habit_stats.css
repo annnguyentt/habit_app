@@ -18,19 +18,70 @@ body {
 }
 
 .header {
-    height: auto;
     background-color: white;
-}
-
-h1 {
-    color: black;
-    position: relative;
-    top: 0;
-    left: 0;
+    height: 150px;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 70px;
+}
+
+.wrapper.stats {
+    background: linear-gradient(100deg, rgba(253,187,46,0.5) 0%, rgba(252,93,190,1) 30%, rgba(110,60,209,1) 100%);
+    position: relative;
+}
+
+.img.square {
+    width: 20px;
+    top: 50%;
+    right: 19%;
+    position: absolute;
+    box-shadow: rgba(255, 255, 255, 0.5) 0px 7px 29px 0px;
+    transform: rotate(39deg);
+}
+.img.green-square {
+    width: 14px;
+    top: 20%;
+    left: 19%;
+    position: absolute;
+    box-shadow: rgba(225, 225, 225, 0.25) 0px 54px 55px, rgba(225, 225, 225, 0.12) 0px -12px 30px, rgba(225, 225, 225, 0.12) 0px 4px 6px, rgba(225, 225, 225, 0.17) 0px 12px 13px, rgba(225, 225, 225, 0.09) 0px -3px 5px;
+    transform: rotate(39deg);
+}
+.img.triangle {
+    width: 27px;
+    top: 50%;
+    left: 10%;
+    position: absolute;
+    transform: rotate(-15deg);
+}
+.img.checkbox {
+    width: 50px;
+    height: 50px;
+    border: none;
+    transform: rotate(20deg);
+    position: absolute;
+    right: 2%;
+    bottom: 11%;
+    box-shadow: rgba(255, 255, 255, 0.5) 0px 7px 29px 0px;
+}
+
+.img.dot {
+    width: 7px;
+    aspect-ratio: 1/1;
+    top: 76%;
+    right: 43%;
+}
+.wrapper.stats > span {
+    width: 50px;
+    height: 10px;
+}
+
+.wrapper div {
+    border: none;
+}
+
+h1 {
+    top: auto;
+    left: auto;
 }
 
 #period-bar {
@@ -107,7 +158,7 @@ h1 {
 .item-value {
     font-weight: 600;
     font-size: 19px;
-    margin: 15px 4px;
+    margin: 10px 4px 6px 4px;
 }
 
 .item-name {
@@ -123,11 +174,20 @@ h1 {
 }
 
 #completion-rate-bar-chart {
-    padding: 0 15px;
+    padding: 5px;
     padding-bottom: 110px;
-    margin: 40px 20px 10px 20px;
+    margin: 10px 20px 0 20px;
+    
 }
+
+#completion-rate-bar-chart > h2 {
+    font-size: 22px;
+}
+
 #barChart {
+    background: rgba(234, 225, 252, 0.5);
+    border-radius: 10px;
     width: 100%;
-    max-width: 760px;
+    margin: 0;
+    padding: 10px 5px 5px 5px;
 }

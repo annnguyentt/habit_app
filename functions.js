@@ -451,3 +451,8 @@ function addNewHabit(habitId, habitName, startDate, schedule, goal) {
     };
 }
 
+
+// drop dup in array
+function dropDuplicate(value, index, self) {
+    return self.indexOf(value) === index;
+  }

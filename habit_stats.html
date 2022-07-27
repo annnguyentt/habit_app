@@ -30,21 +30,29 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <script src='https://cdn.plot.ly/plotly-2.12.1.min.js'></script>
 </head>
 
 <body>
     <main class="body-container">
         <div class="header">
-            <h1><span>Stats</span></h1>
-            <ul id="period-bar">
-                <li class="period selected">This Week</li>
-                <li class="period">This Month</li>
-                <li class="period">Last Month</li>
-                <li class="period">Last 30 Days</li>
-                <li class="period">Last 60 Days</li>
-                <li class="period" id="custom">Custom</li>
-            </ul>
+            <div class="wrapper stats">
+                <img src="images/green-round-check-tick-mark-icon-free-11642102801avwgbr13jx-removebg-preview.png" class="img checkbox">
+                <img src="images/led-triangular-1-purple-removebg-preview.png" class="img triangle">
+                <img src="images/square-icon-9-removebg-preview.png" class="img green-square">
+                <img src="images/orange_square_2-removebg-preview.png" class="img square">
+                <img src='images/emoji-icon-glossy-25-33-symbols-geometric-green-circle-72dpi-forPersonalUseOnly-removebg-preview.png' class="img dot">
+            </div>
+            <h1>Stats</h1>
         </div>
+        <ul id="period-bar">
+            <li class="period selected">This Week</li>
+            <li class="period">This Month</li>
+            <li class="period">Last Month</li>
+            <li class="period">Last 30 Days</li>
+            <li class="period">Last 60 Days</li>
+            <li class="period" id="custom">Custom</li>
+        </ul>
         <div id="period-display">From 2022-01-01 To 2022-09-01</div>
         <div class="stats-display">
             <div id="overview">
@@ -71,8 +79,8 @@
             </div>
         </div>
         <div id="completion-rate-bar-chart">
-            <h2>Performance</h2>
-            <canvas id="barChart"></canvas>
+            <h2>Daily Performance</h2>
+            <canvas id="barChart" style="width: 100%; height: 280px; margin: 0;"></canvas>
         </div>
 
     </main>
